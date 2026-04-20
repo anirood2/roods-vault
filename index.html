@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rood's Vault — Pokémon & TCG Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f5f4f0;
+  --bg2:     #edecea;
+  --surface: #ffffff;
+  --surface2:#fafaf8;
+  --border:  #e0ddd8;
+  --border2: #ccc9c2;
+  --red:     #e3000b;   /* Pokéball red */
+  --red2:    #b5000a;
+  --yellow:  #ffcb05;   /* Pokémon yellow */
+  --yellow2: #f0b800;
+  --blue:    #2979cc;
+  --green:   #18a058;
+  --purple:  #7c4dff;
+  --text:    #1a1814;
+  --text2:   #6b6760;
+  --text3:   #b0ada6;
+  --white:   #ffffff;
+  --shadow:  0 2px 12px rgba(0,0,0,0.08);
+  --shadow2: 0 4px 24px rgba(0,0,0,0.12);
+  --r:       14px;
+  --font:    'Nunito', sans-serif;
+  --mono:    'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── POKÉBALL PATTERN HEADER BG ── */
+.site-header {
+  background: var(--red);
+  position: relative;
+  overflow: hidden;
+  padding: 0 16px;
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle 80px at 10% 50%, rgba(255,255,255,0.06) 0%, transparent 70%),
+    radial-gradient(circle 120px at 90% 30%, rgba(0,0,0,0.08) 0%, transparent 70%);
+}
+.site-header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--yellow) 0%, var(--yellow2) 100%);
+}
+.header-inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 0; gap: 12px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+.wordmark-wrap { display: flex; align-items: center; gap: 14px; }
+.pokeball-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(180deg, #fff 50%, #1a1814 50%);
+  border: 3px solid #fff;
+  position: relative; flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+}
+.pokeball-icon::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 100%; height: 3px; background: #fff;
+}
+.pokeball-icon::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; border: 3px solid #1a1814;
+  box-shadow: 0 0 0 2px #fff;
+}
+.wordmark { color: #fff; }
+.wordmark-name {
+  font-size: clamp(22px,5vw,34px); font-weight: 900;
+  letter-spacing: -0.5px; line-height: 1;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.wordmark-name span { color: var(--yellow); }
+.wordmark-sub {
+  font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.65);
+  letter-spacing: 2px; text-transform: uppercase; margin-top: 3px;
+}
+.hdr-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── PORTFOLIO BANNER ── */
+.portfolio-banner {
+  background: var(--yellow);
+  border-bottom: 3px solid var(--yellow2);
+}
+.banner-inner {
+  max-width: 960px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4,1fr);
+  padding: 0;
+}
+.pstat {
+  padding: 14px 20px; border-right: 1px solid rgba(0,0,0,0.1);
+  position: relative;
+}
+.pstat:last-child { border-right: none; }
+.pstat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,0,0,0.5); margin-bottom: 3px; }
+.pstat-val { font-size: 20px; font-weight: 900; color: var(--text); line-height: 1.1; }
+.pstat-val.big { font-size: 24px; color: var(--red); }
+
+/* ── WRAP ── */
+.app { max-width: 960px; margin: 0 auto; padding: 22px 16px 80px; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 0; margin-bottom: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 4px; box-shadow: var(--shadow);
+}
+.tab {
+  flex: 1; text-align: center; padding: 9px 6px; border-radius: 9px;
+  font-size: 13px; font-weight: 800; cursor: pointer; transition: all .2s;
+  color: var(--text2); border: none; background: none; letter-spacing: .3px;
+}
+.tab.active { background: var(--red); color: #fff; box-shadow: 0 2px 10px rgba(227,0,11,.25); }
+.tab:hover:not(.active) { color: var(--text); background: var(--bg2); }
+
+/* ── PANELS ── */
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.panel-title { font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+
+/* ── TYPE SELECTOR (sealed/graded/raw) ── */
+.type-selector { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.type-btn {
+  flex: 1; min-width: 90px; padding: 10px 6px; border-radius: 10px;
+  border: 2px solid var(--border); background: var(--surface2);
+  text-align: center; cursor: pointer; transition: all .2s; font-weight: 800;
+  font-size: 13px; color: var(--text2);
+}
+.type-btn.active { border-color: var(--red); background: rgba(227,0,11,.06); color: var(--red); }
+.type-btn:hover:not(.active) { border-color: var(--border2); color: var(--text); }
+.type-btn .tb-icon { font-size: 22px; display: block; margin-bottom: 3px; }
+.type-btn .tb-label { font-size: 11px; display: block; }
+
+/* ── DROP ZONE ── */
+.drop-zone {
+  border: 2px dashed var(--border2); border-radius: 12px; padding: 36px 20px;
+  text-align: center; cursor: pointer; transition: all .25s; background: var(--bg2);
+}
+.drop-zone:hover, .drop-zone.over {
+  border-color: var(--red); background: rgba(227,0,11,.04); transform: scale(1.005);
+}
+.drop-icon { font-size: 40px; display: block; margin-bottom: 10px; }
+.drop-title { font-size: 17px; font-weight: 900; margin-bottom: 5px; color: var(--text); }
+.drop-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); line-height: 1.8; }
+.drop-sub b { color: var(--text2); }
+.drop-sub span { color: var(--red); }
+
+/* ── MANUAL ENTRY FORM ── */
+.manual-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group.full { grid-column: 1/-1; }
+.form-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+.form-input, .form-select {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 12px; color: var(--text);
+  font-family: var(--font); font-size: 13px; font-weight: 600; outline: none;
+  transition: border-color .2s; -webkit-appearance: none;
+}
+.form-input:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(227,0,11,.1); }
+.form-input::placeholder { color: var(--text3); font-weight: 400; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; border-radius: 10px; font-family: var(--font);
+  font-weight: 800; font-size: 13px; cursor: pointer; border: none;
+  transition: all .2s; letter-spacing: .2px; white-space: nowrap;
+}
+.btn-red { background: var(--red); color: #fff; box-shadow: 0 3px 12px rgba(227,0,11,.25); }
+.btn-red:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 5px 18px rgba(227,0,11,.3); }
+.btn-red:disabled { opacity:.35; cursor:not-allowed; transform:none; }
+.btn-yellow { background: var(--yellow); color: var(--text); box-shadow: 0 3px 12px rgba(255,203,5,.3); }
+.btn-yellow:hover { background: var(--yellow2); }
+.btn-ghost { background: var(--surface); border: 1.5px solid var(--border); color: var(--text2); }
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); background: var(--bg2); }
+.btn-ghost-red { background: rgba(227,0,11,.07); border: 1.5px solid rgba(227,0,11,.2); color: var(--red); }
+.btn-ghost-red:hover { background: rgba(227,0,11,.12); }
+.btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 8px; }
+.btn-full { width: 100%; justify-content: center; padding: 13px; font-size: 14px; }
+
+/* ── SPINNER ── */
+.spin-wrap { text-align: center; padding: 36px 0; }
+.spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; margin: 0 auto 14px; animation: spin .75s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-label { font-weight: 800; font-size: 14px; color: var(--text); }
+.spin-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+/* ── SCAN RESULT ROW ── */
+.scan-card-row {
+  background: var(--surface2); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 10px; animation: fadeUp .3s ease both;
+  transition: border-color .2s;
+}
+.scan-card-row:hover { border-color: var(--border2); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.scr-head { display: flex; gap: 12px; align-items: flex-start; }
+.scr-thumb { width: 54px; height: 75px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; background: var(--bg2); }
+.scr-thumb-ph { width: 54px; height: 75px; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; background: var(--bg2); display:flex; align-items:center; justify-content:center; font-size:22px; }
+.scr-info { flex: 1; min-width: 0; }
+.scr-name { font-size: 16px; font-weight: 900; margin-bottom: 5px; color: var(--text); }
+.scr-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.tag { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.tg { background: rgba(41,121,204,.1); color: var(--blue); }
+.ts { background: rgba(255,203,5,.2); color: #7a5c00; }
+.tr { background: rgba(124,77,255,.1); color: var(--purple); }
+.tc { background: rgba(24,160,88,.1); color: var(--green); }
+.tv { background: rgba(227,0,11,.08); color: var(--red); }
+.ty { background: rgba(107,103,96,.1); color: var(--text2); }
+
+/* ── PRICE CHIPS ── */
+.price-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; align-items: center; }
+.price-chip {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 5px 10px; min-width: 64px;
+}
+.pc-label { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+.pc-val { font-size: 15px; font-weight: 900; color: var(--red); margin-top: 1px; font-family: var(--mono); }
+.pc-val.lo { color: var(--blue); }
+.pc-val.cm { color: #1a7a50; }
+.pc-loading { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+.scr-actions { display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.cond-select {
+  background: var(--surface); border: 1.5px solid var(--border); color: var(--text);
+  font-family: var(--font); font-weight: 700; font-size: 12px;
+  padding: 6px 10px; border-radius: 8px; outline: none; cursor: pointer;
+}
+.cond-select:focus { border-color: var(--red); }
+
+/* ── COLLECTION ── */
+.coll-toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.search-bar {
+  flex: 1; min-width: 180px; background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 9px; padding: 9px 14px 9px 36px; color: var(--text);
+  font-family: var(--font); font-weight: 600; font-size: 13px; outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23b0ada6' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 12px center; box-shadow: var(--shadow);
+  transition: border-color .2s;
+}
+.search-bar:focus { border-color: var(--red); }
+.search-bar::placeholder { color: var(--text3); font-weight: 400; }
+
+.filter-tabs { display: flex; gap: 4px; }
+.filter-tab {
+  padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 800;
+  border: 1.5px solid var(--border); background: var(--surface); color: var(--text2);
+  cursor: pointer; transition: all .2s;
+}
+.filter-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+.filter-tab:hover:not(.active) { border-color: var(--border2); color: var(--text); }
+
+.sort-bar { display: flex; gap: 4px; flex-wrap: wrap; }
+.sort-btn { font-family: var(--mono); font-size: 10px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text3); cursor: pointer; transition: all .2s; }
+.sort-btn.active { border-color: var(--red); color: var(--red); background: rgba(227,0,11,.06); }
+
+.coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 12px; }
+
+/* collection card */
+.coll-card {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r);
+  overflow: hidden; box-shadow: var(--shadow); transition: all .2s; animation: fadeUp .35s ease both;
+}
+.coll-card:hover { box-shadow: var(--shadow2); transform: translateY(-2px); border-color: var(--border2); }
+.cc-img-wrap { background: var(--bg2); padding: 14px; display: flex; justify-content: center; position: relative; }
+.cc-img { height: 130px; object-fit: contain; border-radius: 5px; display: block; }
+.cc-img-ph { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+.cc-badge {
+  position: absolute; top: 8px; left: 8px; font-family: var(--mono); font-size: 9px;
+  padding: 3px 8px; border-radius: 20px; font-weight: 600; letter-spacing: .5px;
+}
+.badge-raw { background: rgba(24,160,88,.15); color: var(--green); }
+.badge-graded { background: rgba(124,77,255,.15); color: var(--purple); }
+.badge-sealed { background: rgba(41,121,204,.15); color: var(--blue); }
+.cc-cond {
+  position: absolute; top: 8px; right: 8px; font-family: var(--mono); font-size: 9px;
+  padding: 3px 8px; border-radius: 20px; font-weight: 600;
+}
+.cc-body { padding: 12px 14px; }
+.cc-name { font-size: 15px; font-weight: 900; line-height: 1.2; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cc-set { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cc-prices { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.cc-pi { background: var(--bg2); border-radius: 8px; padding: 6px 8px; }
+.cc-pi-label { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+.cc-pi-val { font-size: 15px; font-weight: 900; color: var(--red); margin-top: 1px; }
+.cc-pi-val.blue { color: var(--blue); font-size: 13px; }
+.cc-pi-val.purple { color: var(--purple); }
+.cc-pi-val.na { color: var(--text3); font-size: 11px; font-family: var(--mono); }
+.cc-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid var(--border); }
+.cc-date { font-family: var(--mono); font-size: 9px; color: var(--text3); }
+.cc-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 3px; border-radius: 5px; transition: color .2s; }
+.cc-del:hover { color: var(--red); }
+
+/* empty */
+.coll-empty { text-align: center; padding: 52px 24px; grid-column: 1/-1; }
+.coll-empty-icon { font-size: 52px; margin-bottom: 12px; }
+.coll-empty-title { font-size: 18px; font-weight: 900; color: var(--text2); margin-bottom: 5px; }
+.coll-empty-sub { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+
+/* error */
+.error-bar { background: rgba(227,0,11,.07); border: 1.5px solid rgba(227,0,11,.2); border-radius: 9px; padding: 12px 16px; color: var(--red); font-family: var(--mono); font-size: 12px; margin-bottom: 12px; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--text); color: #fff; border-radius: 10px;
+  padding: 10px 22px; font-weight: 700; font-size: 13px;
+  transition: transform .3s; z-index: 9999; white-space: nowrap; pointer-events: none;
+  box-shadow: var(--shadow2);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* section divider */
+.sec-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 14px; }
+.sec-divider-line { flex: 1; height: 1px; background: var(--border); }
+.sec-divider-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; }
+
+/* API key bar */
+.api-key-bar {
+  background: #fff8e1; border-bottom: 2px solid var(--yellow2);
+  padding: 10px 16px;
+}
+.api-key-inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.api-key-label { font-family: var(--mono); font-size: 11px; color: #7a5c00; font-weight: 600; white-space: nowrap; }
+.api-key-input {
+  flex: 1; min-width: 200px; background: #fff; border: 1.5px solid var(--yellow2);
+  border-radius: 8px; padding: 7px 12px; font-family: var(--mono); font-size: 12px;
+  color: var(--text); outline: none; transition: border-color .2s;
+}
+.api-key-input:focus { border-color: var(--red); }
+.api-key-input::placeholder { color: var(--text3); }
+.api-key-set-btn { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 7px 16px; font-family: var(--font); font-weight: 800; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.api-key-status { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+.aks-ok { background: rgba(24,160,88,.12); color: var(--green); }
+.aks-no { background: rgba(227,0,11,.08); color: var(--red); }
+.api-key-link { font-family: var(--mono); font-size: 11px; color: var(--blue); text-decoration: none; white-space: nowrap; }
+.api-key-link:hover { text-decoration: underline; }
+.model-key-row { display: flex; flex-direction: column; gap: 5px; }
+.model-key-label { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: #7a5c00; font-weight: 600; }
+.model-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc9c2; flex-shrink: 0; transition: background .3s; }
+.model-dot.active { background: var(--green); box-shadow: 0 0 6px rgba(24,160,88,.4); }
+
+/* scan history */
+.hist-entry {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r);
+  margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow); animation: fadeUp .3s ease both;
+}
+.hist-head {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  cursor: pointer; transition: background .15s;
+}
+.hist-head:hover { background: var(--bg2); }
+.hist-thumb { width: 60px; height: 44px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; background: var(--bg2); }
+.hist-thumb-ph { width: 60px; height: 44px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.hist-meta { flex: 1; min-width: 0; }
+.hist-title { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.hist-sub { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.hist-chevron { color: var(--text3); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+.hist-entry.open .hist-chevron { transform: rotate(180deg); }
+.hist-body { display: none; border-top: 1px solid var(--border); padding: 12px 16px; }
+.hist-entry.open .hist-body { display: block; }
+.hist-cards { display: flex; flex-direction: column; gap: 8px; }
+.hist-card-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg2); border-radius: 8px; }
+.hist-card-img { width: 36px; height: 50px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--border); }
+.hist-card-img-ph { width: 36px; height: 50px; border-radius: 4px; flex-shrink: 0; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.hist-card-info { flex: 1; min-width: 0; }
+.hist-card-name { font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-card-sub { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.hist-card-price { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--red); white-space: nowrap; flex-shrink: 0; }
+.hist-empty { text-align: center; padding: 48px 24px; }
+.hist-empty-icon { font-size: 44px; margin-bottom: 10px; }
+.hist-empty-title { font-size: 17px; font-weight: 900; color: var(--text2); margin-bottom: 5px; }
+.hist-empty-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+@media (max-width: 600px) {
+  .banner-inner { grid-template-columns: 1fr 1fr; }
+  .coll-grid { grid-template-columns: 1fr; }
+  .manual-form { grid-template-columns: 1fr; }
+  .pstat { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .type-btn { min-width: 70px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SITE HEADER ═══ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="wordmark-wrap">
+      <div class="pokeball-icon"></div>
+      <div class="wordmark">
+        <div class="wordmark-name">Rood's <span>Vault</span></div>
+        <div class="wordmark-sub">Pokémon &amp; TCG · Personal Collection</div>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost btn-sm" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff" onclick="refreshAllPrices()">↻ Refresh Prices</button>
+      <button class="btn btn-yellow btn-sm" onclick="exportCollection()">⬇ Export CSV</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ WORKER STATUS BAR ═══ -->
+<div class="api-key-bar">
+  <div class="api-key-inner" style="flex-direction:row;align-items:center;gap:12px;flex-wrap:wrap">
+    <span class="api-key-label">⚡ Rood's Vault API</span>
+    <span id="worker-status" class="api-key-status aks-no">Checking connection…</span>
+    <span style="font-family:var(--mono);font-size:11px;color:#7a5c00">All AI keys secured in Cloudflare Worker — no keys in this page</span>
+    <a class="api-key-link" href="market.html" style="margin-left:auto">📊 Market Explorer →</a>
+  </div>
+</div>
+
+<!-- ═══ PORTFOLIO BANNER ═══ -->
+<div class="portfolio-banner">
+  <div class="banner-inner">
+    <div class="pstat">
+      <div class="pstat-label">Total Items</div>
+      <div class="pstat-val big" id="stat-count">0</div>
+    </div>
+    <div class="pstat">
+      <div class="pstat-label">Portfolio Value</div>
+      <div class="pstat-val big" id="stat-value">$0.00</div>
+    </div>
+    <div class="pstat">
+      <div class="pstat-label">Top Card</div>
+      <div class="pstat-val" id="stat-top" style="font-size:13px;line-height:1.3">—</div>
+    </div>
+    <div class="pstat">
+      <div class="pstat-label">Prices Updated</div>
+      <div class="pstat-val" id="stat-refresh" style="font-size:13px">Never</div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" id="tab-scan" onclick="showTab('scan')">📷 Scan</button>
+    <button class="tab" id="tab-search" onclick="showTab('search')">🔍 Search</button>
+    <button class="tab" id="tab-manual" onclick="showTab('manual')">✏️ Manual Add</button>
+    <button class="tab" id="tab-history" onclick="showTab('history')">🕓 History</button>
+    <button class="tab" id="tab-collection" onclick="showTab('collection')">📦 My Vault</button>
+  </div>
+
+  <!-- ═══ SCAN TAB ═══ -->
+  <div id="pane-scan">
+    <!-- Item type selector -->
+    <div class="panel">
+      <div class="panel-title">What are you adding?</div>
+      <div class="type-selector">
+        <div class="type-btn active" id="type-raw" onclick="setType('raw',this)">
+          <span class="tb-icon">🃏</span><span class="tb-label">Raw Card</span>
+        </div>
+        <div class="type-btn" id="type-graded" onclick="setType('graded',this)">
+          <span class="tb-icon">🏆</span><span class="tb-label">Graded</span>
+        </div>
+        <div class="type-btn" id="type-sealed" onclick="setType('sealed',this)">
+          <span class="tb-icon">📦</span><span class="tb-label">Sealed Box</span>
+        </div>
+      </div>
+      <div id="graded-extra" style="display:none;margin-top:10px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="form-select" id="grade-company" style="flex:1;min-width:100px">
+            <option value="PSA">PSA</option><option value="BGS">BGS</option><option value="CGC">CGC</option><option value="SGC">SGC</option>
+          </select>
+          <select class="form-select" id="grade-score" style="flex:1;min-width:100px">
+            <option>10</option><option>9.5</option><option>9</option><option>8.5</option><option>8</option><option>7</option><option>6</option><option>5</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drop zone -->
+    <div class="panel">
+      <div class="panel-title">Scan Image</div>
+      <div id="drop-zone" class="drop-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+        <span class="drop-icon">📷</span>
+        <div class="drop-title">Drop or paste a photo here</div>
+        <div class="drop-sub">
+          <b>Raw cards · Graded slabs · Sealed boxes · Multiple items per photo</b><br>
+          Claude AI identifies each item · <span>Browse files</span>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+    </div>
+
+    <div id="scan-loading" style="display:none">
+      <div class="spin-wrap"><div class="spinner"></div>
+        <div class="spin-label" id="scan-loading-msg">Identifying items...</div>
+        <div class="spin-sub" id="scan-loading-sub">Claude AI is analyzing your photo</div>
+      </div>
+    </div>
+    <div id="scan-error" class="error-bar" style="display:none"></div>
+    <div id="scan-results"></div>
+  </div>
+
+  <!-- ═══ SEARCH TAB ═══ -->
+  <div id="pane-search" style="display:none">
+    <div class="panel">
+      <div class="panel-title">Search Pokémon Card Database</div>
+      <div style="display:flex;gap:8px">
+        <input type="text" class="form-input" id="search-input" placeholder="Charizard, Pikachu VMAX, Umbreon..." style="flex:1" onkeydown="if(event.key==='Enter')doSearch()">
+        <button class="btn btn-red" onclick="doSearch()">Search</button>
+      </div>
+    </div>
+    <div id="search-loading" style="display:none">
+      <div class="spin-wrap"><div class="spinner"></div><div class="spin-label">Searching...</div></div>
+    </div>
+    <div id="search-error" class="error-bar" style="display:none"></div>
+    <div id="search-results"></div>
+  </div>
+
+  <!-- ═══ MANUAL ADD TAB ═══ -->
+  <div id="pane-manual" style="display:none">
+    <div class="panel">
+      <div class="panel-title">What are you adding?</div>
+      <div class="type-selector">
+        <div class="type-btn active" id="mtype-raw" onclick="setManualType('raw',this)"><span class="tb-icon">🃏</span><span class="tb-label">Raw Card</span></div>
+        <div class="type-btn" id="mtype-graded" onclick="setManualType('graded',this)"><span class="tb-icon">🏆</span><span class="tb-label">Graded</span></div>
+        <div class="type-btn" id="mtype-sealed" onclick="setManualType('sealed',this)"><span class="tb-icon">📦</span><span class="tb-label">Sealed Box</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Item Details</div>
+      <div class="manual-form">
+        <div class="form-group full">
+          <div class="form-label">Item Name *</div>
+          <input type="text" class="form-input" id="m-name" placeholder="e.g. Charizard Base Set, Paldea Evolved Booster Box">
+        </div>
+        <div class="form-group">
+          <div class="form-label">TCG / Category</div>
+          <select class="form-select" id="m-tcg">
+            <option>Pokemon</option><option>MTG</option><option>Yu-Gi-Oh</option><option>Lorcana</option><option>One Piece</option><option>Sports</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Set / Product</div>
+          <input type="text" class="form-input" id="m-set" placeholder="e.g. Base Set, Paldea Evolved">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Card Number</div>
+          <input type="text" class="form-input" id="m-number" placeholder="e.g. 4/102">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Rarity</div>
+          <input type="text" class="form-input" id="m-rarity" placeholder="e.g. Holo Rare, Alt Art">
+        </div>
+        <!-- Raw fields -->
+        <div id="mf-raw" class="form-group">
+          <div class="form-label">Condition</div>
+          <select class="form-select" id="m-condition">
+            <option>Near Mint</option><option>Lightly Played</option><option>Moderately Played</option><option>Heavily Played</option><option>Mint</option>
+          </select>
+        </div>
+        <div id="mf-raw2" class="form-group">
+          <div class="form-label">Variant</div>
+          <select class="form-select" id="m-variant">
+            <option>None</option><option>Holo</option><option>Reverse Holo</option><option>1st Edition</option><option>Shadowless</option><option>Foil</option><option>Promo</option>
+          </select>
+        </div>
+        <!-- Graded fields -->
+        <div id="mf-graded" class="form-group" style="display:none">
+          <div class="form-label">Grading Company</div>
+          <select class="form-select" id="m-grade-co">
+            <option>PSA</option><option>BGS</option><option>CGC</option><option>SGC</option>
+          </select>
+        </div>
+        <div id="mf-graded2" class="form-group" style="display:none">
+          <div class="form-label">Grade</div>
+          <select class="form-select" id="m-grade-sc">
+            <option>10</option><option>9.5</option><option>9</option><option>8.5</option><option>8</option><option>7</option><option>6</option><option>5</option>
+          </select>
+        </div>
+        <!-- Sealed fields -->
+        <div id="mf-sealed" class="form-group" style="display:none">
+          <div class="form-label">Sealed Product Type</div>
+          <select class="form-select" id="m-sealed-type">
+            <option>Booster Box</option><option>Elite Trainer Box</option><option>Booster Pack</option><option>Collection Box</option><option>Tin</option><option>Bundle</option><option>Other</option>
+          </select>
+        </div>
+        <div id="mf-sealed2" class="form-group" style="display:none">
+          <div class="form-label">Quantity</div>
+          <input type="number" class="form-input" id="m-qty" value="1" min="1">
+        </div>
+        <!-- Price paid -->
+        <div class="form-group">
+          <div class="form-label">Price Paid ($)</div>
+          <input type="number" class="form-input" id="m-paid" placeholder="0.00" step="0.01">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Year</div>
+          <input type="text" class="form-input" id="m-year" placeholder="e.g. 1999">
+        </div>
+        <div class="form-group full">
+          <div class="form-label">Notes</div>
+          <input type="text" class="form-input" id="m-notes" placeholder="Any extra info (cert #, purchase source, etc.)">
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="btn btn-red btn-full" onclick="addManualCard()">+ Add to Vault</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HISTORY TAB ═══ -->
+  <div id="pane-history" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase">Every scan you've ever made — auto-saved</div>
+      <button class="btn btn-ghost btn-sm" onclick="clearHistory()" style="color:var(--red)">🗑 Clear All History</button>
+    </div>
+    <div id="hist-list"></div>
+  </div>
+
+  <!-- ═══ COLLECTION TAB ═══ -->
+  <div id="pane-collection" style="display:none">
+    <div class="coll-toolbar">
+      <input type="text" class="search-bar" id="coll-search" placeholder="Search your vault..." oninput="renderCollection()">
+    </div>
+    <div class="coll-toolbar">
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-tab" onclick="setFilter('raw',this)">🃏 Raw</button>
+        <button class="filter-tab" onclick="setFilter('graded',this)">🏆 Graded</button>
+        <button class="filter-tab" onclick="setFilter('sealed',this)">📦 Sealed</button>
+      </div>
+      <div class="sort-bar" style="margin-left:auto">
+        <button class="sort-btn active" onclick="setSort('date',this)">Newest</button>
+        <button class="sort-btn" onclick="setSort('value',this)">$ Value</button>
+        <button class="sort-btn" onclick="setSort('name',this)">A–Z</button>
+      </div>
+    </div>
+    <div id="coll-grid" class="coll-grid"></div>
+  </div>
+
+</div><!-- end .app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═════════════════ WORKER CONFIG ═════════════════ */
+// All API keys live in the Cloudflare Worker — nothing secret here.
+// After deploying your Worker, paste its URL below.
+const WORKER_URL = 'https://roods-vault.YOUR_SUBDOMAIN.workers.dev';
+// e.g. 'https://roods-vault.anirood.workers.dev'
+
+/* ═════════════════ STATE ═════════════════ */
+let collection = loadCollection();
+let scanHistory = loadHistory();
+let sortMode = 'date';
+let filterMode = 'all';
+let itemType = 'raw';
+let mItemType = 'raw';
+let imgBase64 = null, imgType = null;
+let currentImageDataUrl = null; // for storing thumbnail in history
+
+/* ═════════════════ PERSIST ═════════════════ */
+function loadCollection() {
+  try { return JSON.parse(localStorage.getItem('roods_vault_v1') || '[]'); } catch { return []; }
+}
+function saveCollection() { localStorage.setItem('roods_vault_v1', JSON.stringify(collection)); updateBanner(); }
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem('roods_vault_history_v1') || '[]'); } catch { return []; }
+}
+function saveHistory() { localStorage.setItem('roods_vault_history_v1', JSON.stringify(scanHistory)); }
+
+/* ═════════════════ TABS ═════════════════ */
+function showTab(name) {
+  ['scan','search','manual','history','collection'].forEach(t => {
+    document.getElementById(`pane-${t}`).style.display = t===name ? '' : 'none';
+    document.getElementById(`tab-${t}`).classList.toggle('active', t===name);
+  });
+  if (name==='collection') renderCollection();
+  if (name==='history') renderHistory();
+}
+
+/* ═════════════════ TYPE BUTTONS ═════════════════ */
+function setType(type, el) {
+  itemType = type;
+  document.querySelectorAll('#pane-scan .type-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('graded-extra').style.display = type==='graded' ? '' : 'none';
+}
+function setManualType(type, el) {
+  mItemType = type;
+  ['mtype-raw','mtype-graded','mtype-sealed'].forEach(id => document.getElementById(id).classList.remove('active'));
+  el.classList.add('active');
+  const raw = type==='raw', graded = type==='graded', sealed = type==='sealed';
+  document.getElementById('mf-raw').style.display = raw ? '' : 'none';
+  document.getElementById('mf-raw2').style.display = raw ? '' : 'none';
+  document.getElementById('mf-graded').style.display = graded ? '' : 'none';
+  document.getElementById('mf-graded2').style.display = graded ? '' : 'none';
+  document.getElementById('mf-sealed').style.display = sealed ? '' : 'none';
+  document.getElementById('mf-sealed2').style.display = sealed ? '' : 'none';
+}
+
+/* ═════════════════ FILE / DROP ═════════════════ */
+function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('over'); const f=e.dataTransfer.files[0]; if(f?.type.startsWith('image/')) loadFile(f); }
+function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('over'); }
+function handleDragLeave() { document.getElementById('drop-zone').classList.remove('over'); }
+function handleFileSelect(e) { const f=e.target.files[0]; if(f) loadFile(f); }
+
+function loadFile(file) {
+  const r = new FileReader();
+  r.onload = e => {
+    currentImageDataUrl = e.target.result;
+    imgBase64 = currentImageDataUrl.split(',')[1];
+    imgType = file.type||'image/jpeg';
+    document.getElementById('drop-zone').innerHTML = `
+      <img src="${currentImageDataUrl}" style="max-height:200px;max-width:100%;border-radius:8px;object-fit:contain;margin-bottom:12px">
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-red" onclick="scanImage(event)">🔍 Scan & Price</button>
+        <button class="btn btn-ghost" onclick="resetDrop(event)">✕ Clear</button>
+      </div>`;
+    document.getElementById('scan-results').innerHTML = '';
+    document.getElementById('scan-error').style.display = 'none';
+  };
+  r.readAsDataURL(file);
+}
+function resetDrop(e) {
+  if(e) e.stopPropagation();
+  imgBase64=imgType=null; document.getElementById('file-input').value='';
+  document.getElementById('scan-results').innerHTML='';
+  document.getElementById('scan-error').style.display='none';
+  document.getElementById('drop-zone').innerHTML = `<span class="drop-icon">📷</span><div class="drop-title">Drop or paste a photo here</div><div class="drop-sub"><b>Raw cards · Graded slabs · Sealed boxes · Multiple items per photo</b><br>Claude AI identifies each item · <span>Browse files</span></div>`;
+}
+
+/* ═════════════════ SCAN VIA WORKER ═════════════════ */
+async function scanImage(e) {
+  if (e) e.stopPropagation();
+  if (!imgBase64) return;
+
+  const typeHint = itemType==='sealed'
+    ? 'sealed product (booster box, ETB, tin, etc.)'
+    : itemType==='graded' ? 'graded card in a slab' : 'raw trading card';
+
+  showScanLoading('Scanning with all AI models…', 'Worker is running Claude · Gemini · GPT-4o in parallel');
+
+  try {
+    const res = await fetch(`${WORKER_URL}/scan`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ base64: imgBase64, mimeType: imgType, typeHint })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Worker error ${res.status}`);
+
+    hideScanLoading();
+    saveScanToHistory(data.items, data.wonModel, data.modelsUsed);
+    renderScanResults(data.items, data.wonModel, data.modelsUsed, 0);
+
+  } catch (err) {
+    hideScanLoading();
+    showScanError(err.message.includes('Failed to fetch')
+      ? 'Cannot reach Worker — check WORKER_URL in index.html and that your Worker is deployed.'
+      : err.message);
+  }
+}
+
+/* ═════════════════ RENDER SCAN RESULTS ═════════════════ */
+function renderScanResults(items, wonModel, modelsUsed, failedCount) {
+  const container = document.getElementById('scan-results');
+  const modelBadge = wonModel
+    ? `<span style="font-family:var(--mono);font-size:10px;background:rgba(24,160,88,.1);color:var(--green);padding:2px 8px;border-radius:10px;margin-left:8px">best of ${(modelsUsed||[wonModel]).length}: ${wonModel} won</span>`
+    : '';
+  container.innerHTML = `<div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">${items.length} item${items.length!==1?'s':''} identified${modelBadge}</div><div class="sec-divider-line"></div></div>`;
+  window._scanItems = items;
+
+  items.forEach((item, i) => {
+    const isPokemon = (item.tcg||'').toLowerCase().includes('pokemon');
+    const isGraded = item.item_type==='graded';
+    const isSealed = item.item_type==='sealed';
+    const div = document.createElement('div');
+    div.className = 'scan-card-row';
+    div.style.animationDelay = `${i*0.06}s`;
+
+    const badgeClass = isGraded?'badge-graded':isSealed?'badge-sealed':'badge-raw';
+    const badgeLabel = isGraded?`🏆 ${item.grade_company||''}  ${item.grade_score||''}`:isSealed?`📦 ${item.sealed_type||'Sealed'}`:'🃏 Raw';
+
+    div.innerHTML = `
+      <div class="scr-head">
+        <div class="scr-thumb-ph" id="thumb-${i}">🃏</div>
+        <div class="scr-info">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+            <span class="tag ${badgeClass.replace('badge-','t')}">${badgeLabel}</span>
+            ${item.confidence ? `<span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${item.confidence}% conf.</span>` : ''}
+          </div>
+          <div class="scr-name">${esc(item.name||'Unknown')}</div>
+          <div class="scr-tags">
+            ${item.tcg?`<span class="tag tg">${esc(item.tcg)}</span>`:''}
+            ${item.set?`<span class="tag ts">${esc(item.set)}${item.number?' · #'+esc(item.number):''}</span>`:''}
+            ${item.rarity?`<span class="tag tr">${esc(item.rarity)}</span>`:''}
+            ${item.condition&&!isGraded&&!isSealed?`<span class="tag tc">${esc(item.condition)}</span>`:''}
+            ${item.year?`<span class="tag ty">${esc(item.year)}</span>`:''}
+            ${item.variant&&item.variant!=='None'?`<span class="tag tv">${esc(item.variant)}</span>`:''}
+          </div>
+          <div class="price-chips" id="prices-${i}">
+            <span class="pc-loading">Fetching live prices…</span>
+          </div>
+        </div>
+      </div>
+      <div class="scr-actions" style="margin-top:10px">
+        ${!isGraded&&!isSealed?`<select class="cond-select" id="sc-cond-${i}">
+          <option ${item.condition==='Near Mint'?'selected':''}>Near Mint</option>
+          <option ${item.condition==='Lightly Played'?'selected':''}>Lightly Played</option>
+          <option ${item.condition==='Moderately Played'?'selected':''}>Moderately Played</option>
+          <option ${item.condition==='Heavily Played'?'selected':''}>Heavily Played</option>
+          <option>Mint</option>
+        </select>`:''}
+        <button class="btn btn-ghost-red btn-sm" id="addbtn-${i}" onclick="addScannedItem(${i})" disabled>+ Add to Vault</button>
+        <a href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent((item.name||'')+' '+(item.set||''))}&LH_Sold=1&LH_Complete=1" target="_blank" class="btn btn-ghost btn-sm">eBay Sold ↗</a>
+      </div>`;
+    container.appendChild(div);
+
+    // Fetch prices
+    if(isPokemon && !isSealed) fetchPokemonPrices(item, i);
+    else if(isSealed) { fetchSealedPrice(item, i); }
+    else fetchJustTCGPrices(item, i);
+  });
+}
+
+/* ═════════════════ PRICE FETCHING ═════════════════ */
+async function fetchPokemonPrices(item, idx) {
+  const priceEl = document.getElementById(`prices-${idx}`);
+  const addBtn = document.getElementById(`addbtn-${idx}`);
+  const name = item.search_name || item.name || '';
+  try {
+    let q = `name:"${name}"`;
+    if (item.number) q += ` number:"${item.number.split('/')[0]}"`;
+    const res = await fetch(`${WORKER_URL}/pokemon?q=${encodeURIComponent(q)}&pageSize=5&select=id,name,set,number,rarity,images,tcgplayer,cardmarket`);
+    if (!res.ok) throw new Error(`pokemon ${res.status}`);
+    const data = await res.json();
+    const results = data.data || [];
+    if (!results.length) { await fetchJustTCGPrices(item, idx); return; }
+    let best = results[0];
+    if (item.set) { const sm = results.find(r => (r.set?.name||'').toLowerCase().includes((item.set||'').toLowerCase().split(' ')[0])); if (sm) best = sm; }
+    if (window._scanItems?.[idx]) { window._scanItems[idx]._pokemonId = best.id; window._scanItems[idx]._pokemonCard = best; }
+    const tcgp = best.tcgplayer?.prices || {};
+    const mkp = best.cardmarket?.prices || {};
+    const market = tcgp.holofoil?.market ?? tcgp.normal?.market ?? tcgp['1stEditionHolofoil']?.market ?? null;
+    const low = tcgp.holofoil?.low ?? tcgp.normal?.low ?? null;
+    const cmAvg = mkp.averageSellPrice ?? mkp.trendPrice ?? null;
+    const thumb = document.getElementById(`thumb-${idx}`);
+    if (thumb && best.images?.small) thumb.outerHTML = `<img src="${best.images.small}" class="scr-thumb" onerror="this.style.display='none'">`;
+    if (window._scanItems?.[idx]) { window._scanItems[idx]._prices = { tcgMarket: market, tcgLow: low, cmAvg, updatedAt: Date.now() }; window._scanItems[idx]._image = best.images?.large || best.images?.small || ''; window._scanItems[idx]._tcgplayerUrl = best.tcgplayer?.url || ''; }
+    priceEl.innerHTML = buildChips({ market, low, cmAvg });
+    if (addBtn) addBtn.disabled = false;
+    updateLatestHistoryPrices(idx, { tcgMarket: market, tcgLow: low, cmAvg, updatedAt: Date.now() }, best.images?.large || best.images?.small || '');
+  } catch (e) { priceEl.innerHTML = `<span class="pc-loading">Price unavailable</span>`; if (addBtn) addBtn.disabled = false; }
+}
+
+async function fetchJustTCGPrices(item, idx) {
+  const priceEl = document.getElementById(`prices-${idx}`);
+  const addBtn = document.getElementById(`addbtn-${idx}`);
+  const gameMap = { 'pokemon':'pokemon','mtg':'mtg','magic':'mtg','yu-gi-oh':'yugioh','yugioh':'yugioh','lorcana':'lorcana','one piece':'one-piece-tcg' };
+  const tcgLower = (item.tcg||'').toLowerCase();
+  let game = 'pokemon';
+  for (const [k,v] of Object.entries(gameMap)) { if (tcgLower.includes(k)) { game = v; break; } }
+  try {
+    const res = await fetch(`${WORKER_URL}/prices?q=${encodeURIComponent(item.name||'')}&game=${game}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const cards = data.data || [];
+    if (!cards.length) { priceEl.innerHTML = `<span class="pc-loading">Not found — check eBay</span>`; if (addBtn) addBtn.disabled = false; return; }
+    const best = cards[0]; const variants = best.variants || [];
+    const nm = variants.find(v => (v.condition||'').includes('Near Mint') || v.condition==='NM') || variants[0];
+    const prices = { tcgMarket: nm?.market_price||null, tcgLow: nm?.low_price||null, updatedAt: Date.now() };
+    if (window._scanItems?.[idx]) window._scanItems[idx]._prices = prices;
+    priceEl.innerHTML = buildChips({ market: prices.tcgMarket, low: prices.tcgLow });
+    if (addBtn) addBtn.disabled = false;
+    updateLatestHistoryPrices(idx, prices, null);
+  } catch { priceEl.innerHTML = `<span class="pc-loading">Price unavailable</span>`; if (addBtn) addBtn.disabled = false; }
+}
+
+async function fetchSealedPrice(item, idx) {
+  const priceEl=document.getElementById(`prices-${idx}`);
+  const addBtn=document.getElementById(`addbtn-${idx}`);
+  // For sealed, search eBay-style via JustTCG or show link
+  priceEl.innerHTML=`<a href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent((item.name||'')+(item.set?' '+item.set:'')+(item.sealed_type?' '+item.sealed_type:''))}&LH_Sold=1&LH_Complete=1" target="_blank" class="btn btn-ghost btn-sm" style="font-size:11px">Check eBay Sold ↗</a>`;
+  if(window._scanItems?.[idx])window._scanItems[idx]._prices={updatedAt:Date.now()};
+  if(addBtn)addBtn.disabled=false;
+}
+
+function buildChips({market,low,cmAvg}){
+  let h='';
+  if(market)h+=`<div class="price-chip"><div class="pc-label">Market</div><div class="pc-val">${fmtUSD(market)}</div></div>`;
+  if(low)h+=`<div class="price-chip"><div class="pc-label">Low</div><div class="pc-val lo">${fmtUSD(low)}</div></div>`;
+  if(cmAvg)h+=`<div class="price-chip"><div class="pc-label">CardMkt</div><div class="pc-val cm">€${cmAvg.toFixed(2)}</div></div>`;
+  if(!h)h=`<span class="pc-loading">No price data — check eBay</span>`;
+  return h;
+}
+
+/* ═════════════════ ADD SCANNED ITEM ═════════════════ */
+function addScannedItem(idx) {
+  const item=window._scanItems?.[idx];
+  if(!item) return;
+  const cond=document.getElementById(`sc-cond-${idx}`)?.value||item.condition||'Near Mint';
+  const itype=item.item_type||itemType||'raw';
+  const entry={
+    id:`${(item._pokemonId||item.name||'card').replace(/\s/g,'_')}_${Date.now()}`,
+    pokemonId:item._pokemonId||null,
+    name:item.name||'Unknown',
+    tcg:item.tcg||'Pokemon',
+    set:item.set||'',
+    number:item.number||'',
+    rarity:item.rarity||'',
+    year:item.year||'',
+    item_type:itype,
+    condition:itype==='raw'?cond:'',
+    grade_company:itype==='graded'?item.grade_company||document.getElementById('grade-company')?.value||'PSA':'',
+    grade_score:itype==='graded'?item.grade_score||document.getElementById('grade-score')?.value||'10':'',
+    sealed_type:itype==='sealed'?item.sealed_type||'Sealed':'',
+    variant:item.variant||'None',
+    image:item._image||'',
+    addedAt:Date.now(),
+    prices:item._prices||{},
+    tcgplayerUrl:item._tcgplayerUrl||''
+  };
+  collection.push(entry);saveCollection();
+  const btn=document.getElementById(`addbtn-${idx}`);
+  if(btn){btn.textContent='✓ Added!';btn.disabled=true;btn.style.opacity='.5';}
+  toast(`✓ Added: ${entry.name}`);
+}
+
+/* ═════════════════ SEARCH ═════════════════ */
+async function doSearch() {
+  const q=document.getElementById('search-input').value.trim();
+  if(!q) return;
+  document.getElementById('search-loading').style.display='';
+  document.getElementById('search-error').style.display='none';
+  document.getElementById('search-results').innerHTML='';
+  try {
+    const res=await fetch(`https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(q)}"&pageSize=12&select=id,name,set,number,rarity,images,tcgplayer,cardmarket`,{headers:{'X-Api-Key':KEYS.pokemontcg}});
+    if(!res.ok) throw new Error(`API error ${res.status}`);
+    const data=await res.json();
+    document.getElementById('search-loading').style.display='none';
+    const cards=data.data||[];
+    if(!cards.length){document.getElementById('search-error').textContent=`No results for "${q}"`;document.getElementById('search-error').style.display='';return;}
+    renderSearchResults(cards);
+  }catch(err){document.getElementById('search-loading').style.display='none';document.getElementById('search-error').textContent=err.message;document.getElementById('search-error').style.display='';}
+}
+
+function renderSearchResults(cards) {
+  const container=document.getElementById('search-results');
+  container.innerHTML=`<div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">${cards.length} results</div><div class="sec-divider-line"></div></div>`;
+  window._searchCards=cards;
+  cards.forEach((card,i)=>{
+    const tcgp=card.tcgplayer?.prices||{};
+    const mkp=card.cardmarket?.prices||{};
+    const market=tcgp.holofoil?.market??tcgp.normal?.market??tcgp['1stEditionHolofoil']?.market??null;
+    const low=tcgp.holofoil?.low??tcgp.normal?.low??null;
+    const cmAvg=mkp.averageSellPrice??mkp.trendPrice??null;
+    const div=document.createElement('div');div.className='scan-card-row';div.style.animationDelay=`${i*0.04}s`;
+    div.innerHTML=`
+      <div class="scr-head">
+        ${card.images?.small?`<img src="${card.images.small}" class="scr-thumb" onerror="this.style.display='none'">`:`<div class="scr-thumb-ph">🃏</div>`}
+        <div class="scr-info">
+          <div class="scr-name">${esc(card.name)}</div>
+          <div class="scr-tags">
+            <span class="tag tg">Pokemon</span>
+            ${card.set?.name?`<span class="tag ts">${esc(card.set.name)}${card.number?' · #'+esc(card.number):''}</span>`:''}
+            ${card.rarity?`<span class="tag tr">${esc(card.rarity)}</span>`:''}
+          </div>
+          <div class="price-chips">${buildChips({market,low,cmAvg})||'<span class="pc-loading">No price data</span>'}</div>
+        </div>
+      </div>
+      <div class="scr-actions" style="margin-top:10px">
+        <select class="cond-select" id="sr-cond-${i}"><option>Near Mint</option><option>Lightly Played</option><option>Moderately Played</option><option>Heavily Played</option><option>Mint</option></select>
+        <button class="btn btn-ghost-red btn-sm" onclick="addFromSearch('${card.id}',${i})">+ Add to Vault</button>
+        ${card.tcgplayer?.url?`<a href="${card.tcgplayer.url}" target="_blank" class="btn btn-ghost btn-sm">TCGPlayer ↗</a>`:''}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function addFromSearch(cardId,idx){
+  const card=window._searchCards[idx];
+  const cond=document.getElementById(`sr-cond-${idx}`)?.value||'Near Mint';
+  const tcgp=card.tcgplayer?.prices||{};const mkp=card.cardmarket?.prices||{};
+  const entry={
+    id:`${card.id}_${Date.now()}`,pokemonId:card.id,name:card.name,tcg:'Pokemon',
+    set:card.set?.name||'',number:card.number||'',rarity:card.rarity||'',year:'',
+    item_type:'raw',condition:cond,grade_company:'',grade_score:'',sealed_type:'',variant:'None',
+    image:card.images?.large||card.images?.small||'',addedAt:Date.now(),
+    prices:{tcgMarket:tcgp.holofoil?.market??tcgp.normal?.market??null,tcgLow:tcgp.holofoil?.low??tcgp.normal?.low??null,cmAvg:mkp.averageSellPrice??mkp.trendPrice??null,updatedAt:Date.now()},
+    tcgplayerUrl:card.tcgplayer?.url||''
+  };
+  collection.push(entry);saveCollection();toast(`✓ Added: ${card.name}`);
+}
+
+/* ═════════════════ MANUAL ADD ═════════════════ */
+function addManualCard(){
+  const name=document.getElementById('m-name').value.trim();
+  if(!name){toast('Please enter an item name');return;}
+  const itype=mItemType;
+  const entry={
+    id:`manual_${Date.now()}`,pokemonId:null,
+    name,tcg:document.getElementById('m-tcg').value,
+    set:document.getElementById('m-set').value,
+    number:document.getElementById('m-number').value,
+    rarity:document.getElementById('m-rarity').value,
+    year:document.getElementById('m-year').value,
+    item_type:itype,
+    condition:itype==='raw'?document.getElementById('m-condition').value:'',
+    grade_company:itype==='graded'?document.getElementById('m-grade-co').value:'',
+    grade_score:itype==='graded'?document.getElementById('m-grade-sc').value:'',
+    sealed_type:itype==='sealed'?document.getElementById('m-sealed-type').value:'',
+    qty:itype==='sealed'?parseInt(document.getElementById('m-qty').value)||1:1,
+    variant:itype==='raw'?(document.getElementById('m-variant')?.value||'None'):'None',
+    pricePaid:parseFloat(document.getElementById('m-paid').value)||null,
+    notes:document.getElementById('m-notes').value,
+    image:'',addedAt:Date.now(),prices:{updatedAt:Date.now()},tcgplayerUrl:''
+  };
+  collection.push(entry);saveCollection();
+  // Clear form
+  ['m-name','m-set','m-number','m-rarity','m-year','m-notes','m-paid'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast(`✓ Added: ${name}`);
+  showTab('collection');
+}
+
+/* ═════════════════ COLLECTION RENDER ═════════════════ */
+function setFilter(mode,el){filterMode=mode;document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderCollection();}
+function setSort(mode,el){sortMode=mode;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderCollection();}
+
+function renderCollection(){
+  const grid=document.getElementById('coll-grid');
+  const filter=(document.getElementById('coll-search')?.value||'').toLowerCase();
+  let cards=[...collection];
+  if(filter)cards=cards.filter(c=>(c.name+c.set+c.tcg+c.rarity+(c.notes||'')).toLowerCase().includes(filter));
+  if(filterMode!=='all')cards=cards.filter(c=>(c.item_type||'raw')===filterMode);
+  if(sortMode==='date')cards.sort((a,b)=>b.addedAt-a.addedAt);
+  else if(sortMode==='value')cards.sort((a,b)=>(b.prices?.tcgMarket||0)-(a.prices?.tcgMarket||0));
+  else if(sortMode==='name')cards.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+
+  if(!cards.length){
+    grid.innerHTML=`<div class="coll-empty"><div class="coll-empty-icon">${filterMode==='sealed'?'📦':filterMode==='graded'?'🏆':'🃏'}</div><div class="coll-empty-title">${filter?'No matches':'Your vault is empty'}</div><div class="coll-empty-sub">${filter?'Try a different search':'Scan, search or manually add items to get started'}</div></div>`;
+    return;
+  }
+  grid.innerHTML='';
+  cards.forEach((card,i)=>{
+    const p=card.prices||{};
+    const itype=card.item_type||'raw';
+    const isGraded=itype==='graded',isSealed=itype==='sealed';
+    const badgeClass=isGraded?'badge-graded':isSealed?'badge-sealed':'badge-raw';
+    const badgeLabel=isGraded?`🏆 ${card.grade_company||''} ${card.grade_score||''}`:isSealed?`📦 ${card.sealed_type||'Sealed'}`:'🃏 Raw';
+    const condColor=isGraded?'#7c4dff':isSealed?'#2979cc':condColorFn(card.condition);
+    const condLabel=isGraded?`${card.grade_company||''} ${card.grade_score||''}`:isSealed?`${card.qty>1?card.qty+'x ':''}`+(card.sealed_type||''):(card.condition||'NM');
+    const div=document.createElement('div');div.className='coll-card';div.style.animationDelay=`${Math.min(i,8)*0.04}s`;
+    div.innerHTML=`
+      <div class="cc-img-wrap">
+        ${card.image?`<img src="${card.image}" class="cc-img" onerror="this.parentElement.innerHTML='<div class=cc-img-ph>🃏</div>'">`:`<div class="cc-img-ph">${isSealed?'📦':isGraded?'🏆':'🃏'}</div>`}
+        <span class="cc-badge ${badgeClass}">${badgeLabel}</span>
+        ${condLabel?`<span class="cc-cond" style="background:${condColor}18;color:${condColor}">${esc(condLabel)}</span>`:''}
+      </div>
+      <div class="cc-body">
+        <div class="cc-name" title="${esc(card.name)}">${esc(card.name)}</div>
+        <div class="cc-set">${esc(card.tcg||'')}${card.set?' · '+esc(card.set):''}${card.number?' #'+esc(card.number):''}</div>
+        <div class="cc-prices">
+          <div class="cc-pi"><div class="cc-pi-label">Market</div><div class="cc-pi-val">${p.tcgMarket?fmtUSD(p.tcgMarket):'<span class="na">—</span>'}</div></div>
+          <div class="cc-pi"><div class="cc-pi-label">Low</div><div class="cc-pi-val blue">${p.tcgLow?fmtUSD(p.tcgLow):'<span class="na">—</span>'}</div></div>
+          ${p.cmAvg?`<div class="cc-pi"><div class="cc-pi-label">CardMkt</div><div class="cc-pi-val" style="color:#1a7a50;font-size:13px">€${p.cmAvg.toFixed(2)}</div></div>`:''}
+          ${card.pricePaid?`<div class="cc-pi"><div class="cc-pi-label">Paid</div><div class="cc-pi-val" style="color:var(--text2);font-size:13px">${fmtUSD(card.pricePaid)}</div></div>`:''}
+        </div>
+        ${card.notes?`<div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:8px;font-style:italic">${esc(card.notes)}</div>`:''}
+        <div class="cc-footer">
+          <div>
+            <div class="cc-date">Added ${timeAgo(card.addedAt)}</div>
+            ${p.updatedAt?`<div class="cc-date">Prices: ${timeAgo(p.updatedAt)}</div>`:''}
+          </div>
+          <div style="display:flex;gap:5px;align-items:center">
+            ${card.tcgplayerUrl?`<a href="${card.tcgplayerUrl}" target="_blank" class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 8px">TCG ↗</a>`:''}
+            <button class="cc-del" onclick="deleteCard('${card.id}')" title="Remove">🗑</button>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+function condColorFn(c){const m={'Mint':'#18a058','Near Mint':'#18a058','Lightly Played':'#f0b800','Moderately Played':'#e67e00','Heavily Played':'#e3000b','Poor':'#b5000a'};return m[c]||'#6b6760';}
+function deleteCard(id){if(!confirm('Remove this item from your vault?'))return;collection=collection.filter(c=>c.id!==id);saveCollection();renderCollection();toast('Item removed');}
+
+/* ═════════════════ REFRESH ALL ═════════════════ */
+async function refreshAllPrices(){
+  const pokemonEntries = collection.filter(c => c.pokemonId);
+  if (!pokemonEntries.length) { toast('No auto-refresh cards — cards need a pokemontcg.io match'); return; }
+  toast(`Refreshing ${pokemonEntries.length} cards…`);
+  for (let i = 0; i < pokemonEntries.length; i++) {
+    const entry = pokemonEntries[i];
+    try {
+      const res = await fetch(`${WORKER_URL}/pokemon?q=id:${entry.pokemonId}&pageSize=1&select=id,tcgplayer,cardmarket,images`);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const card = data.data?.[0];
+      if (!card) continue;
+      const tcgp = card.tcgplayer?.prices || {};
+      const mkp = card.cardmarket?.prices || {};
+      entry.prices = {
+        tcgMarket: tcgp.holofoil?.market ?? tcgp.normal?.market ?? entry.prices?.tcgMarket,
+        tcgLow: tcgp.holofoil?.low ?? tcgp.normal?.low ?? entry.prices?.tcgLow,
+        cmAvg: mkp.averageSellPrice ?? mkp.trendPrice ?? entry.prices?.cmAvg,
+        updatedAt: Date.now()
+      };
+      if (card.images?.large && !entry.image) entry.image = card.images.large;
+      if (card.tcgplayer?.url) entry.tcgplayerUrl = card.tcgplayer.url;
+    } catch {}
+    if (i < pokemonEntries.length - 1) await sleep(120);
+  }
+  saveCollection(); renderCollection(); updateBanner();
+  toast('✓ Prices refreshed!');
+}
+
+/* ═════════════════ BANNER ═════════════════ */
+function updateBanner(){
+  const count=collection.length;
+  const total=collection.reduce((s,c)=>s+(c.prices?.tcgMarket||0),0);
+  const top=collection.reduce((t,c)=>(c.prices?.tcgMarket||0)>(t?.prices?.tcgMarket||0)?c:t,null);
+  document.getElementById('stat-count').textContent=count;
+  document.getElementById('stat-value').textContent=fmtUSD(total);
+  document.getElementById('stat-top').textContent=top?`${top.name}${top.prices?.tcgMarket?' ('+fmtUSD(top.prices.tcgMarket)+')':''}`: '—';
+  const times=collection.map(c=>c.prices?.updatedAt).filter(Boolean);
+  if(times.length)document.getElementById('stat-refresh').textContent=timeAgo(Math.max(...times));
+}
+
+/* ═════════════════ EXPORT ═════════════════ */
+function exportCollection(){
+  if(!collection.length){toast('Nothing to export');return;}
+  const rows=[['Name','TCG','Type','Set','Number','Rarity','Year','Condition','Grade','Sealed Type','Variant','Market $','Low $','CardMarket €','Paid $','Notes','Added']];
+  collection.forEach(c=>rows.push([c.name,c.tcg,c.item_type||'raw',c.set,c.number,c.rarity,c.year||'',c.condition||'',c.grade_company&&c.grade_score?`${c.grade_company} ${c.grade_score}`:'',c.sealed_type||'',c.variant||'',c.prices?.tcgMarket||'',c.prices?.tcgLow||'',c.prices?.cmAvg||'',c.pricePaid||'',c.notes||'',new Date(c.addedAt).toLocaleDateString()]));
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`roods-vault-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  toast('Exported!');
+}
+
+/* ═════════════════ SCAN HISTORY ═════════════════ */
+function saveScanToHistory(items, wonModel, modelsUsed) {
+  // Compress image thumbnail (small JPEG, max 200px wide)
+  let thumb = null;
+  if (currentImageDataUrl) {
+    try {
+      const canvas = document.createElement('canvas');
+      const img = new Image();
+      img.src = currentImageDataUrl;
+      // Use synchronous-ish approach: just store a downsized version
+      canvas.width = 120; canvas.height = 80;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, 120, 80);
+      thumb = canvas.toDataURL('image/jpeg', 0.5);
+    } catch { thumb = null; }
+  }
+  const entry = {
+    id: `hist_${Date.now()}`,
+    ts: Date.now(),
+    thumb,
+    wonModel: wonModel || 'unknown',
+    modelsUsed: modelsUsed || [],
+    itemCount: items.length,
+    items: items.map(it => ({
+      name: it.name,
+      tcg: it.tcg,
+      set: it.set,
+      number: it.number,
+      rarity: it.rarity,
+      item_type: it.item_type || 'raw',
+      condition: it.condition,
+      grade_company: it.grade_company,
+      grade_score: it.grade_score,
+      variant: it.variant,
+      confidence: it.confidence,
+      image: it._image || null,
+      prices: it._prices || null
+    }))
+  };
+  scanHistory.unshift(entry); // newest first
+  // Keep max 100 entries to avoid localStorage bloat
+  if (scanHistory.length > 100) scanHistory = scanHistory.slice(0, 100);
+  saveHistory();
+}
+
+// Called after prices are fetched to update the latest history entry's prices
+function updateLatestHistoryPrices(idx, prices, image) {
+  if (!scanHistory.length) return;
+  const latest = scanHistory[0];
+  if (latest.items[idx]) {
+    if (prices) latest.items[idx].prices = prices;
+    if (image) latest.items[idx].image = image;
+    saveHistory();
+  }
+}
+
+function renderHistory() {
+  const list = document.getElementById('hist-list');
+  if (!scanHistory.length) {
+    list.innerHTML = `<div class="hist-empty"><div class="hist-empty-icon">🕓</div><div class="hist-empty-title">No scan history yet</div><div class="hist-empty-sub">Every time you scan an image, it appears here automatically</div></div>`;
+    return;
+  }
+  list.innerHTML = '';
+  scanHistory.forEach((entry, ei) => {
+    const div = document.createElement('div');
+    div.className = 'hist-entry';
+    div.style.animationDelay = `${Math.min(ei,8)*0.04}s`;
+    const topPrice = entry.items.reduce((max, it) => Math.max(max, it.prices?.tcgMarket||0), 0);
+    div.innerHTML = `
+      <div class="hist-head" onclick="this.parentElement.classList.toggle('open')">
+        ${entry.thumb
+          ? `<img src="${entry.thumb}" class="hist-thumb" onerror="this.outerHTML='<div class=hist-thumb-ph>📷</div>'">`
+          : `<div class="hist-thumb-ph">📷</div>`}
+        <div class="hist-meta">
+          <div class="hist-title">${entry.itemCount} item${entry.itemCount!==1?'s':''} scanned${topPrice ? ' · top: '+fmtUSD(topPrice) : ''}</div>
+          <div class="hist-sub">${new Date(entry.ts).toLocaleString()}${entry.wonModel&&entry.wonModel!=='unknown' ? ' · best: '+entry.wonModel+(entry.modelsUsed?.length>1?' of '+entry.modelsUsed.length:'') : ''}</div>
+        </div>
+        <span class="hist-chevron">▼</span>
+      </div>
+      <div class="hist-body">
+        <div class="hist-cards">
+          ${entry.items.map((it, ii) => `
+            <div class="hist-card-row">
+              ${it.image
+                ? `<img src="${it.image}" class="hist-card-img" onerror="this.outerHTML='<div class=hist-card-img-ph>🃏</div>'">`
+                : `<div class="hist-card-img-ph">🃏</div>`}
+              <div class="hist-card-info">
+                <div class="hist-card-name">${esc(it.name||'Unknown')}</div>
+                <div class="hist-card-sub">${esc(it.tcg||'')}${it.set?' · '+esc(it.set):''}${it.item_type==='graded'&&it.grade_company?' · '+it.grade_company+' '+it.grade_score:''}</div>
+              </div>
+              <div class="hist-card-price">${it.prices?.tcgMarket ? fmtUSD(it.prices.tcgMarket) : '—'}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost-red btn-sm" onclick="reAddFromHistory(${ei})">+ Add all to Vault</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteHistoryEntry('${entry.id}');renderHistory()">🗑 Delete entry</button>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function reAddFromHistory(entryIdx) {
+  const entry = scanHistory[entryIdx];
+  if (!entry) return;
+  let added = 0;
+  entry.items.forEach(it => {
+    collection.push({
+      id: `hist_add_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+      pokemonId: null,
+      name: it.name||'Unknown',
+      tcg: it.tcg||'Pokemon',
+      set: it.set||'',
+      number: it.number||'',
+      rarity: it.rarity||'',
+      year: '',
+      item_type: it.item_type||'raw',
+      condition: it.condition||'Near Mint',
+      grade_company: it.grade_company||'',
+      grade_score: it.grade_score||'',
+      sealed_type: '',
+      variant: it.variant||'None',
+      image: it.image||'',
+      addedAt: Date.now(),
+      prices: it.prices||{},
+      tcgplayerUrl: ''
+    });
+    added++;
+  });
+  saveCollection();
+  toast(`✓ Added ${added} item${added!==1?'s':''} to Vault`);
+}
+
+function deleteHistoryEntry(id) {
+  scanHistory = scanHistory.filter(e => e.id !== id);
+  saveHistory();
+}
+
+function clearHistory() {
+  if (!confirm(`Clear all ${scanHistory.length} history entries? This cannot be undone.`)) return;
+  scanHistory = [];
+  saveHistory();
+  renderHistory();
+  toast('Scan history cleared');
+}
+
+/* ═════════════════ HELPERS ═════════════════ */
+function fmtUSD(v){if(!v&&v!==0)return 'N/A';return '$'+parseFloat(v).toFixed(2);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function timeAgo(ts){if(!ts)return 'never';const s=Math.floor((Date.now()-ts)/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),2800);}
+function showScanLoading(msg,sub){document.getElementById('scan-loading').style.display='';document.getElementById('scan-loading-msg').textContent=msg;document.getElementById('scan-loading-sub').textContent=sub||'';}
+function hideScanLoading(){document.getElementById('scan-loading').style.display='none';}
+function showScanError(msg){const e=document.getElementById('scan-error');e.textContent='⚠ '+msg;e.style.display='';}
+
+/* ═════════════════ PASTE & INIT ═════════════════ */
+document.addEventListener('paste', e => { for (const item of (e.clipboardData?.items||[])) { if (item.type.startsWith('image/')) { loadFile(item.getAsFile()); break; } } });
+
+// Check Worker connection on load
+(async function checkWorker() {
+  const el = document.getElementById('worker-status');
+  if (!el) return;
+  if (WORKER_URL.includes('YOUR_SUBDOMAIN')) {
+    el.textContent = '⚠ Worker URL not set — edit WORKER_URL in index.html';
+    el.className = 'api-key-status aks-no';
+    return;
+  }
+  try {
+    const res = await fetch(`${WORKER_URL}/health`);
+    const data = await res.json();
+    const activeKeys = Object.values(data.keys || {}).filter(Boolean).length;
+    el.textContent = `✓ Connected · ${activeKeys} AI key${activeKeys!==1?'s':''} active`;
+    el.className = 'api-key-status aks-ok';
+  } catch {
+    el.textContent = '✗ Worker unreachable — deploy worker.js to Cloudflare first';
+    el.className = 'api-key-status aks-no';
+  }
+})();
+
+updateBanner();
+</script>
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rood's Market — Pokémon Card Explorer by Year</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f5f4f0;
+  --bg2:     #edecea;
+  --surface: #ffffff;
+  --surface2:#fafaf8;
+  --border:  #e0ddd8;
+  --border2: #ccc9c2;
+  --red:     #e3000b;
+  --red2:    #b5000a;
+  --yellow:  #ffcb05;
+  --yellow2: #f0b800;
+  --blue:    #2979cc;
+  --green:   #18a058;
+  --purple:  #7c4dff;
+  --orange:  #f57c00;
+  --text:    #1a1814;
+  --text2:   #6b6760;
+  --text3:   #b0ada6;
+  --shadow:  0 2px 12px rgba(0,0,0,0.08);
+  --shadow2: 0 6px 28px rgba(0,0,0,0.13);
+  --r:       14px;
+  --font:    'Nunito', sans-serif;
+  --mono:    'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* ── HEADER ── */
+.site-header { background: var(--red); position: relative; overflow: hidden; padding: 0 16px; }
+.site-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--yellow) 0%, var(--yellow2) 100%); }
+.header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+.wordmark-wrap { display: flex; align-items: center; gap: 12px; }
+.pokeball-icon { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(180deg,#fff 50%,#1a1814 50%); border: 3px solid #fff; position: relative; flex-shrink: 0; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
+.pokeball-icon::before { content: ''; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:100%; height:3px; background:#fff; }
+.pokeball-icon::after { content: ''; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:12px; height:12px; border-radius:50%; background:#fff; border:3px solid #1a1814; box-shadow:0 0 0 2px #fff; }
+.wordmark-name { font-size: clamp(20px,4.5vw,30px); font-weight: 900; color: #fff; letter-spacing: -0.5px; line-height: 1; }
+.wordmark-name span { color: var(--yellow); }
+.wordmark-sub { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,.6); letter-spacing: 2px; text-transform: uppercase; margin-top: 3px; }
+.nav-link { color: rgba(255,255,255,.8); font-weight: 700; font-size: 13px; text-decoration: none; padding: 7px 14px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,.25); transition: all .2s; }
+.nav-link:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+/* ── HERO CONTROLS ── */
+.hero { background: var(--yellow); border-bottom: 3px solid var(--yellow2); padding: 28px 16px; }
+.hero-inner { max-width: 1100px; margin: 0 auto; }
+.hero-title { font-size: clamp(22px,5vw,36px); font-weight: 900; color: var(--text); margin-bottom: 4px; letter-spacing: -0.5px; }
+.hero-sub { font-family: var(--mono); font-size: 12px; color: rgba(0,0,0,.45); margin-bottom: 20px; letter-spacing: 1px; }
+
+/* Year picker grid */
+.year-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.year-btn {
+  padding: 8px 16px; border-radius: 30px; font-family: var(--font); font-weight: 800;
+  font-size: 13px; border: 2px solid rgba(0,0,0,.15); background: rgba(255,255,255,.5);
+  color: var(--text); cursor: pointer; transition: all .2s; user-select: none;
+}
+.year-btn:hover { border-color: var(--red); color: var(--red); background: rgba(255,255,255,.9); }
+.year-btn.selected { background: var(--red); color: #fff; border-color: var(--red); box-shadow: 0 2px 10px rgba(227,0,11,.3); }
+.year-range { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.year-range-label { font-family: var(--mono); font-size:11px; color: rgba(0,0,0,.45); }
+.range-btn { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; border: 1.5px solid rgba(0,0,0,.15); background: rgba(255,255,255,.5); cursor: pointer; transition: all .2s; }
+.range-btn:hover { background: rgba(255,255,255,.9); }
+
+/* Filter bar */
+.filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.filter-group { display: flex; flex-direction: column; gap: 3px; }
+.filter-label { font-family: var(--mono); font-size: 9px; color: rgba(0,0,0,.4); text-transform: uppercase; letter-spacing: 1px; }
+.filter-select {
+  background: rgba(255,255,255,.8); border: 1.5px solid rgba(0,0,0,.15); border-radius: 8px;
+  padding: 8px 12px; font-family: var(--font); font-weight: 700; font-size: 13px;
+  color: var(--text); outline: none; cursor: pointer; transition: all .2s; -webkit-appearance: none;
+}
+.filter-select:focus { border-color: var(--red); background: #fff; }
+.search-input-wrap { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 3px; }
+.hero-search {
+  background: rgba(255,255,255,.8); border: 1.5px solid rgba(0,0,0,.15); border-radius: 8px;
+  padding: 8px 12px; font-family: var(--font); font-weight: 600; font-size: 13px;
+  color: var(--text); outline: none; transition: all .2s; width: 100%;
+}
+.hero-search:focus { border-color: var(--red); background: #fff; }
+.hero-search::placeholder { color: rgba(0,0,0,.3); font-weight: 400; }
+.go-btn {
+  background: var(--red); color: #fff; border: none; border-radius: 10px;
+  padding: 10px 24px; font-family: var(--font); font-weight: 900; font-size: 14px;
+  cursor: pointer; transition: all .2s; white-space: nowrap; align-self: flex-end;
+  box-shadow: 0 3px 12px rgba(227,0,11,.25); letter-spacing: .3px;
+}
+.go-btn:hover { background: var(--red2); transform: translateY(-1px); }
+.go-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* ── APP WRAP ── */
+.app { max-width: 1100px; margin: 0 auto; padding: 22px 16px 80px; }
+
+/* ── RESULTS HEADER ── */
+.results-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.results-label { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+.results-label b { color: var(--text); }
+.view-toggle { display: flex; gap: 4px; }
+.vt-btn { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; font-size: 14px; }
+.vt-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+/* ── SETS ROW ── */
+.sets-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+.sets-row::-webkit-scrollbar { height: 4px; }
+.sets-row::-webkit-scrollbar-track { background: var(--border); border-radius: 2px; }
+.sets-row::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.set-chip {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 30px;
+  cursor: pointer; white-space: nowrap; transition: all .2s; flex-shrink: 0;
+}
+.set-chip:hover { border-color: var(--border2); }
+.set-chip.active { border-color: var(--red); background: rgba(227,0,11,.06); }
+.set-chip img { width: 28px; height: 20px; object-fit: contain; }
+.set-chip-name { font-size: 12px; font-weight: 800; color: var(--text); }
+.set-chip-year { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+
+/* ── CARD GRID ── */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px,1fr)); gap: 14px; }
+.card-grid.list-view { grid-template-columns: 1fr; }
+
+/* ── CARD TILE ── */
+.card-tile {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r);
+  overflow: hidden; box-shadow: var(--shadow); transition: all .22s; cursor: pointer;
+  animation: fadeUp .35s ease both; position: relative;
+}
+.card-tile:hover { box-shadow: var(--shadow2); transform: translateY(-3px) scale(1.015); border-color: var(--border2); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)} }
+
+.card-tile .rank-badge {
+  position: absolute; top: 8px; left: 8px; z-index: 2;
+  width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 10px; font-weight: 700; color: #fff;
+}
+.rank-1 { background: #d4af37; box-shadow: 0 2px 8px rgba(212,175,55,.5); }
+.rank-2 { background: #9ea7b0; }
+.rank-3 { background: #cd7f32; }
+.rank-other { background: rgba(0,0,0,.35); }
+
+.card-img-wrap {
+  background: linear-gradient(135deg, #f0ede8, #e8e4de);
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px 14px 8px; position: relative; min-height: 160px;
+}
+.card-img {
+  max-height: 180px; max-width: 100%; object-fit: contain;
+  border-radius: 6px; display: block;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.2));
+  transition: transform .3s;
+}
+.card-tile:hover .card-img { transform: scale(1.04) rotate(-1deg); }
+.card-img-ph { width: 100px; height: 140px; border-radius: 8px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+
+.rarity-glow { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s; }
+.card-tile:hover .rarity-glow { opacity: 1; }
+.rarity-holo .rarity-glow { background: radial-gradient(ellipse at 50% 30%, rgba(255,220,80,.15), transparent 70%); }
+.rarity-ultra .rarity-glow { background: radial-gradient(ellipse at 50% 30%, rgba(120,100,255,.18), transparent 70%); }
+.rarity-secret .rarity-glow { background: radial-gradient(ellipse at 50% 30%, rgba(255,100,180,.18), transparent 70%); }
+
+.card-body { padding: 10px 12px 12px; }
+.card-name { font-size: 14px; font-weight: 900; line-height: 1.2; margin-bottom: 3px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-set { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-prices { display: flex; flex-direction: column; gap: 4px; }
+.price-row-main { display: flex; align-items: baseline; justify-content: space-between; }
+.price-market { font-size: 18px; font-weight: 900; font-family: var(--mono); color: var(--red); }
+.price-market.cheap { color: var(--green); }
+.price-label-main { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+.price-row-sub { display: flex; gap: 8px; }
+.price-sub-item { display: flex; flex-direction: column; }
+.price-sub-val { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--blue); }
+.price-sub-label { font-family: var(--mono); font-size: 9px; color: var(--text3); }
+.card-rarity-tag { display: inline-block; font-family: var(--mono); font-size: 9px; padding: 2px 7px; border-radius: 10px; margin-top: 6px; font-weight: 600; }
+.add-btn {
+  width: 100%; margin-top: 8px; background: var(--red); color: #fff; border: none;
+  border-radius: 8px; padding: 7px 0; font-family: var(--font); font-weight: 800; font-size: 12px;
+  cursor: pointer; transition: all .2s; display: none;
+}
+.card-tile:hover .add-btn { display: block; }
+.add-btn:hover { background: var(--red2); }
+
+/* LIST VIEW tile */
+.card-grid.list-view .card-tile { display: flex; flex-direction: row; align-items: center; }
+.card-grid.list-view .card-img-wrap { min-height: auto; width: 80px; flex-shrink: 0; padding: 8px; }
+.card-grid.list-view .card-img { max-height: 90px; }
+.card-grid.list-view .card-body { flex: 1; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 16px; }
+.card-grid.list-view .card-name { font-size: 15px; min-width: 150px; }
+.card-grid.list-view .card-prices { flex-direction: row; align-items: center; gap: 16px; }
+.card-grid.list-view .price-market { font-size: 20px; }
+.card-grid.list-view .add-btn { width: auto; margin-top: 0; padding: 6px 14px; display: block; margin-left: auto; }
+
+/* ── LOADING ── */
+.spin-wrap { text-align: center; padding: 60px 0; }
+.spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; margin: 0 auto 16px; animation: spin .75s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.spin-label { font-size: 16px; font-weight: 800; color: var(--text); }
+.spin-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-top: 4px; }
+.spin-progress { font-family: var(--mono); font-size: 11px; color: var(--blue); margin-top: 8px; }
+
+/* ── EMPTY / ERROR ── */
+.empty-state { text-align: center; padding: 60px 24px; }
+.empty-icon { font-size: 56px; margin-bottom: 14px; }
+.empty-title { font-size: 20px; font-weight: 900; color: var(--text2); margin-bottom: 6px; }
+.empty-sub { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+.error-bar { background: rgba(227,0,11,.07); border: 1.5px solid rgba(227,0,11,.2); border-radius: 10px; padding: 14px 18px; color: var(--red); font-family: var(--mono); font-size: 12px; margin-bottom: 16px; }
+
+/* ── STATS STRIP ── */
+.stats-strip { display: grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; box-shadow: var(--shadow); }
+.stat-label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+.stat-val { font-size: 20px; font-weight: 900; color: var(--text); font-family: var(--mono); }
+.stat-val.red { color: var(--red); }
+.stat-val.green { color: var(--green); }
+.stat-val.blue { color: var(--blue); }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+.modal { background: var(--surface); border-radius: 18px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow2); animation: modalIn .25s ease; }
+@keyframes modalIn { from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)} }
+.modal-img-wrap { background: linear-gradient(135deg,#f0ede8,#e0ddd5); display: flex; justify-content: center; padding: 28px; border-radius: 18px 18px 0 0; position: relative; }
+.modal-img { max-height: 280px; object-fit: contain; border-radius: 8px; filter: drop-shadow(0 8px 24px rgba(0,0,0,.25)); }
+.modal-close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,.2); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 20px 22px 24px; }
+.modal-name { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+.modal-set { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 14px; }
+.modal-prices { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.modal-price-block { background: var(--bg2); border-radius: 10px; padding: 10px 12px; }
+.modal-price-label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.modal-price-val { font-size: 18px; font-weight: 900; font-family: var(--mono); color: var(--red); }
+.modal-price-val.blue { color: var(--blue); }
+.modal-price-val.green { color: var(--green); }
+.modal-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.modal-tag { font-family: var(--mono); font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+.modal-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.modal-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 9px; font-weight: 800; font-size: 13px; text-decoration: none; transition: all .2s; border: 1.5px solid var(--border); color: var(--text2); background: var(--bg2); }
+.modal-link:hover { border-color: var(--border2); color: var(--text); }
+.modal-link.primary { background: var(--red); color: #fff; border-color: var(--red); }
+.modal-link.primary:hover { background: var(--red2); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: #fff; border-radius: 10px; padding: 10px 22px; font-weight: 700; font-size: 13px; transition: transform .3s; z-index: 9999; white-space: nowrap; pointer-events: none; box-shadow: var(--shadow2); }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media(max-width:600px) {
+  .card-grid { grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); }
+  .modal-prices { grid-template-columns: 1fr 1fr; }
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .go-btn { width: 100%; }
+  .card-grid.list-view .card-body { flex-direction: column; align-items: flex-start; }
+  .card-grid.list-view .add-btn { margin-left: 0; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="wordmark-wrap">
+      <div class="pokeball-icon"></div>
+      <div>
+        <div class="wordmark-name">Rood's <span>Market</span></div>
+        <div class="wordmark-sub">Pokémon · Prices by Year · Live Data</div>
+      </div>
+    </div>
+    <a href="index.html" class="nav-link">← My Vault</a>
+  </div>
+</header>
+
+<!-- HERO CONTROLS -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-title">📅 Browse Cards by Year</div>
+    <div class="hero-sub">SELECT ONE OR MORE YEARS · FILTER · SORT BY PRICE · POWERED BY POKEMONTCG.IO</div>
+
+    <!-- Year buttons — 1999 to current year -->
+    <div class="year-grid" id="year-grid"></div>
+
+    <!-- Quick ranges -->
+    <div class="year-range">
+      <span class="year-range-label">Quick select:</span>
+      <button class="range-btn" onclick="selectRange(1999,2003)">🏅 Vintage (1999–2003)</button>
+      <button class="range-btn" onclick="selectRange(2004,2010)">📼 Classic (2004–2010)</button>
+      <button class="range-btn" onclick="selectRange(2011,2018)">⚡ Modern (2011–2018)</button>
+      <button class="range-btn" onclick="selectRange(2019,2025)">🔥 Recent (2019–2025)</button>
+      <button class="range-btn" onclick="selectAll()">🌐 All Years</button>
+      <button class="range-btn" onclick="clearYears()">✕ Clear</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <div class="filter-label">Sort by</div>
+        <select class="filter-select" id="sort-by">
+          <option value="market-desc">💰 Most Expensive</option>
+          <option value="market-asc">🤑 Cheapest First</option>
+          <option value="name-asc">A → Z</option>
+          <option value="rarity">⭐ Rarity</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Show only</div>
+        <select class="filter-select" id="filter-rarity">
+          <option value="all">All Rarities</option>
+          <option value="holo">Holo Rare+</option>
+          <option value="ultra">Ultra Rare+</option>
+          <option value="secret">Secret Rare</option>
+          <option value="common">Common</option>
+          <option value="priced">Has Price Data</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Price range</div>
+        <select class="filter-select" id="filter-price">
+          <option value="all">Any Price</option>
+          <option value="under1">Under $1</option>
+          <option value="1to10">$1 – $10</option>
+          <option value="10to50">$10 – $50</option>
+          <option value="50to200">$50 – $200</option>
+          <option value="over200">Over $200</option>
+        </select>
+      </div>
+      <div class="search-input-wrap">
+        <div class="filter-label">Search name</div>
+        <input type="text" class="hero-search" id="name-search" placeholder="e.g. Charizard, Pikachu..." onkeydown="if(event.key==='Enter')fetchCards()">
+      </div>
+      <button class="go-btn" id="go-btn" onclick="fetchCards()">🔍 Find Cards</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app">
+  <div id="error-bar" class="error-bar" style="display:none"></div>
+  <div id="loading" style="display:none">
+    <div class="spin-wrap">
+      <div class="spinner"></div>
+      <div class="spin-label" id="load-label">Loading sets…</div>
+      <div class="spin-sub" id="load-sub">Fetching from pokemontcg.io</div>
+      <div class="spin-progress" id="load-progress"></div>
+    </div>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="stats-strip" id="stats-strip" style="display:none">
+    <div class="stat-card"><div class="stat-label">Cards Found</div><div class="stat-val" id="stat-total">0</div></div>
+    <div class="stat-card"><div class="stat-label">Most Expensive</div><div class="stat-val red" id="stat-max">—</div></div>
+    <div class="stat-card"><div class="stat-label">Cheapest</div><div class="stat-val green" id="stat-min">—</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Market Price</div><div class="stat-val blue" id="stat-avg">—</div></div>
+    <div class="stat-card"><div class="stat-label">Sets Covered</div><div class="stat-val" id="stat-sets">0</div></div>
+  </div>
+
+  <!-- Sets row -->
+  <div class="sets-row" id="sets-row" style="display:none"></div>
+
+  <!-- Results header -->
+  <div class="results-bar" id="results-bar" style="display:none">
+    <div class="results-label" id="results-label"></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select class="filter-select" id="sort-live" style="padding:6px 10px;font-size:12px" onchange="applyFiltersAndRender()">
+        <option value="market-desc">💰 Most Expensive</option>
+        <option value="market-asc">🤑 Cheapest</option>
+        <option value="name-asc">A → Z</option>
+        <option value="rarity">⭐ Rarity</option>
+      </select>
+      <div class="view-toggle">
+        <button class="vt-btn active" id="vt-grid" onclick="setView('grid')" title="Grid view">⊞</button>
+        <button class="vt-btn" id="vt-list" onclick="setView('list')" title="List view">☰</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card grid -->
+  <div class="card-grid" id="card-grid">
+    <div class="empty-state">
+      <div class="empty-icon">🃏</div>
+      <div class="empty-title">Pick a year to explore</div>
+      <div class="empty-sub">Select one or more years above, then click Find Cards</div>
+    </div>
+  </div>
+
+  <!-- Load more -->
+  <div style="text-align:center;margin-top:24px" id="load-more-wrap" style="display:none">
+    <button class="go-btn" id="load-more-btn" onclick="loadMore()" style="display:none">Load More Cards</button>
+  </div>
+</div>
+
+<!-- CARD MODAL -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="closeModal(event)">
+  <div class="modal" id="modal-inner">
+    <div class="modal-img-wrap" id="modal-img-wrap">
+      <button class="modal-close" onclick="document.getElementById('modal').style.display='none'">✕</button>
+      <img id="modal-img" class="modal-img" src="" alt="">
+    </div>
+    <div class="modal-body">
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-set" id="modal-set"></div>
+      <div class="modal-prices" id="modal-prices"></div>
+      <div class="modal-tags" id="modal-tags"></div>
+      <div class="modal-links" id="modal-links"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════ CONFIG ════════ */
+const WORKER_URL = 'https://roods-vault.YOUR_SUBDOMAIN.workers.dev';
+// After deploying worker, replace YOUR_SUBDOMAIN with your Cloudflare subdomain
+// e.g. 'https://roods-vault.anirood.workers.dev'
+
+const API_BASE = WORKER_URL; // all calls go through Worker
+const PAGE_SIZE = 48;
+
+/* ════════ STATE ════════ */
+let selectedYears = new Set();
+let allCards = [];        // raw fetched cards with prices
+let filteredCards = [];   // after filters
+let displayedCount = 0;
+let viewMode = 'grid';    // grid | list
+let activeSetFilter = null;
+let allSets = [];         // sets from selected years
+
+/* ════════ YEAR GRID BUILD ════════ */
+function buildYearGrid() {
+  const grid = document.getElementById('year-grid');
+  const currentYear = new Date().getFullYear();
+  for (let y = currentYear; y >= 1999; y--) {
+    const btn = document.createElement('button');
+    btn.className = 'year-btn';
+    btn.textContent = y;
+    btn.dataset.year = y;
+    btn.onclick = () => toggleYear(y, btn);
+    grid.appendChild(btn);
+  }
+}
+
+function toggleYear(year, btn) {
+  if (selectedYears.has(year)) { selectedYears.delete(year); btn.classList.remove('selected'); }
+  else { selectedYears.add(year); btn.classList.add('selected'); }
+}
+
+function selectRange(from, to) {
+  clearYears();
+  for (let y = from; y <= to; y++) {
+    selectedYears.add(y);
+    const btn = document.querySelector(`.year-btn[data-year="${y}"]`);
+    if (btn) btn.classList.add('selected');
+  }
+}
+
+function selectAll() {
+  document.querySelectorAll('.year-btn').forEach(btn => { selectedYears.add(parseInt(btn.dataset.year)); btn.classList.add('selected'); });
+}
+
+function clearYears() {
+  selectedYears.clear();
+  document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('selected'));
+}
+
+/* ════════ MAIN FETCH ════════ */
+async function fetchCards() {
+  const nameQ = document.getElementById('name-search').value.trim();
+  if (!selectedYears.size && !nameQ) { showError('Pick at least one year or enter a card name.'); return; }
+
+  setLoading(true, 'Fetching sets…', '');
+  hideError();
+  allCards = [];
+  allSets = [];
+  activeSetFilter = null;
+
+  try {
+    // Step 1: get sets for selected years
+    let sets = [];
+    if (selectedYears.size) {
+      setProgress(`Loading sets for ${selectedYears.size} year${selectedYears.size>1?'s':''}…`);
+      sets = await fetchSetsForYears([...selectedYears]);
+      allSets = sets;
+    }
+
+    if (!sets.length && selectedYears.size) {
+      setLoading(false);
+      showError('No sets found for selected years.');
+      return;
+    }
+
+    // Step 2: fetch cards — either by set IDs or by name
+    setLoading(true, 'Loading cards & prices…', 'This may take a moment for multiple years');
+
+    let cards = [];
+    if (sets.length && !nameQ) {
+      // Fetch cards from each set (batched)
+      cards = await fetchCardsFromSets(sets);
+    } else if (nameQ && !sets.length) {
+      // Name-only search
+      cards = await fetchCardsByName(nameQ);
+    } else if (nameQ && sets.length) {
+      // Name + year filter
+      const setIds = sets.map(s => s.id);
+      cards = await fetchCardsByNameInSets(nameQ, setIds);
+    }
+
+    allCards = cards;
+    setLoading(false);
+
+    if (!allCards.length) {
+      showError('No cards found. Try different years or a broader search.');
+      renderEmptyGrid('No cards found matching your filters.');
+      return;
+    }
+
+    renderSetsRow(allSets);
+    applyFiltersAndRender();
+    updateStats();
+
+  } catch (err) {
+    setLoading(false);
+    showError('Error: ' + err.message);
+  }
+}
+
+/* ════════ SET FETCHING ════════ */
+async function fetchSetsForYears(years) {
+  const yearChunks = chunkArray(years, 10);
+  let allFetched = [];
+  for (const chunk of yearChunks) {
+    const q = chunk.map(y => `releaseDate:${y}*`).join(' OR ');
+    const res = await fetch(`${WORKER_URL}/sets?q=${encodeURIComponent(q)}&orderBy=releaseDate`);
+    if (!res.ok) throw new Error(`Sets API ${res.status}`);
+    const data = await res.json();
+    allFetched = allFetched.concat(data.data || []);
+  }
+  return allFetched;
+}
+
+/* ════════ CARD FETCHING ════════ */
+async function fetchCardsFromSets(sets) {
+  // Fetch cards per set, grab their TCGPlayer prices
+  // Limit to prevent massive fetches: max 12 sets if many years selected
+  const setsToFetch = sets.length > 12
+    ? sets.sort((a,b) => new Date(b.releaseDate) - new Date(a.releaseDate)).slice(0, 12)
+    : sets;
+
+  setProgress(`Fetching cards from ${setsToFetch.length} set${setsToFetch.length>1?'s':''}…`);
+
+  let cards = [];
+  for (let i = 0; i < setsToFetch.length; i++) {
+    const set = setsToFetch[i];
+    setProgress(`Set ${i+1}/${setsToFetch.length}: ${set.name}`);
+    const setCards = await fetchCardsInSet(set.id);
+    cards = cards.concat(setCards);
+    await sleep(80); // rate limit courtesy
+  }
+  return cards;
+}
+
+async function fetchCardsInSet(setId) {
+  let page = 1; let results = [];
+  while (true) {
+    const res = await fetch(`${WORKER_URL}/pokemon?q=set.id:${setId}&page=${page}&pageSize=250&select=id,name,set,number,rarity,images,tcgplayer,cardmarket,supertype,subtypes`);
+    if (!res.ok) break;
+    const data = await res.json();
+    results = results.concat(data.data || []);
+    if ((data.data||[]).length < 250) break;
+    page++;
+  }
+  return results;
+}
+
+async function fetchCardsByName(name) {
+  const res = await fetch(`${WORKER_URL}/pokemon?q=name:"${encodeURIComponent(name)}"&pageSize=250&select=id,name,set,number,rarity,images,tcgplayer,cardmarket,supertype,subtypes`);
+  if (!res.ok) throw new Error(`Cards API ${res.status}`);
+  const data = await res.json();
+  return data.data || [];
+}
+
+async function fetchCardsByNameInSets(name, setIds) {
+  // Search by name then filter client-side
+  const cards = await fetchCardsByName(name);
+  return cards.filter(c => setIds.includes(c.set?.id));
+}
+
+/* ════════ FILTER + RENDER ════════ */
+function applyFiltersAndRender() {
+  const sortMode = document.getElementById('sort-live').value || document.getElementById('sort-by').value;
+  const rarityFilter = document.getElementById('filter-rarity').value;
+  const priceFilter = document.getElementById('filter-price').value;
+  const nameFilter = document.getElementById('name-search').value.trim().toLowerCase();
+
+  let cards = [...allCards];
+
+  // Set filter
+  if (activeSetFilter) cards = cards.filter(c => c.set?.id === activeSetFilter);
+
+  // Name filter (client-side refinement)
+  if (nameFilter) cards = cards.filter(c => (c.name||'').toLowerCase().includes(nameFilter));
+
+  // Rarity filter
+  if (rarityFilter !== 'all') {
+    const rarityMap = {
+      holo: ['Rare Holo','Rare Holo EX','Rare Holo GX','Rare Holo LVX','Rare Holo Star','Rare Holo V','Rare Holo VMAX','Rare Holo VSTAR'],
+      ultra: ['Rare Ultra','Rare Rainbow','Rare Secret','Rare Shining','Rare Shiny','Rare Shiny GX','Amazing Rare','Double Rare','Illustration Rare','Special Illustration Rare','Hyper Rare'],
+      secret: ['Rare Secret','Rare Rainbow','Special Illustration Rare','Hyper Rare','Rare Shining'],
+      common: ['Common'],
+      priced: null // handled below
+    };
+    if (rarityFilter === 'priced') {
+      cards = cards.filter(c => getMarketPrice(c) !== null);
+    } else {
+      const targets = rarityMap[rarityFilter] || [];
+      cards = cards.filter(c => {
+        const r = c.rarity || '';
+        if (rarityFilter === 'holo') return targets.includes(r) || r.includes('Holo') || r.includes('Rare') || getMarketPrice(c) > 5;
+        if (rarityFilter === 'ultra') return targets.includes(r) || r.includes('Ultra') || r.includes('Rainbow') || r.includes('Secret') || r.includes('Amazing') || r.includes('Illustration');
+        if (rarityFilter === 'secret') return targets.includes(r) || r.includes('Secret') || r.includes('Rainbow');
+        return targets.includes(r);
+      });
+    }
+  }
+
+  // Price filter
+  if (priceFilter !== 'all') {
+    cards = cards.filter(c => {
+      const p = getMarketPrice(c);
+      if (p === null) return false;
+      if (priceFilter === 'under1') return p < 1;
+      if (priceFilter === '1to10') return p >= 1 && p < 10;
+      if (priceFilter === '10to50') return p >= 10 && p < 50;
+      if (priceFilter === '50to200') return p >= 50 && p < 200;
+      if (priceFilter === 'over200') return p >= 200;
+      return true;
+    });
+  }
+
+  // Sort
+  if (sortMode === 'market-desc') cards.sort((a,b) => (getMarketPrice(b)||0) - (getMarketPrice(a)||0));
+  else if (sortMode === 'market-asc') cards.sort((a,b) => {
+    const pa = getMarketPrice(a), pb = getMarketPrice(b);
+    if (pa === null) return 1; if (pb === null) return -1;
+    return pa - pb;
+  });
+  else if (sortMode === 'name-asc') cards.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  else if (sortMode === 'rarity') {
+    const rOrder = ['Hyper Rare','Special Illustration Rare','Rare Secret','Rare Rainbow','Amazing Rare','Illustration Rare','Rare Ultra','Rare Shiny GX','Rare Shining','Rare Holo VSTAR','Rare Holo VMAX','Rare Holo V','Rare Holo GX','Rare Holo EX','Rare Holo','Rare','Uncommon','Common'];
+    cards.sort((a,b) => {
+      const ai = rOrder.indexOf(a.rarity||''), bi = rOrder.indexOf(b.rarity||'');
+      const as_ = ai === -1 ? 999 : ai, bs_ = bi === -1 ? 999 : bi;
+      if (as_ !== bs_) return as_ - bs_;
+      return (getMarketPrice(b)||0) - (getMarketPrice(a)||0);
+    });
+  }
+
+  filteredCards = cards;
+  displayedCount = 0;
+  renderGrid(true);
+  updateResultsBar();
+}
+
+/* ════════ GRID RENDER ════════ */
+function renderGrid(reset) {
+  const grid = document.getElementById('card-grid');
+  if (reset) grid.innerHTML = '';
+  if (!filteredCards.length) { renderEmptyGrid('No cards match your filters.'); return; }
+
+  const batch = filteredCards.slice(displayedCount, displayedCount + PAGE_SIZE);
+  batch.forEach((card, i) => {
+    const rank = displayedCount + i + 1;
+    grid.appendChild(buildTile(card, rank));
+  });
+  displayedCount += batch.length;
+
+  const lmBtn = document.getElementById('load-more-btn');
+  if (displayedCount < filteredCards.length) {
+    lmBtn.style.display = 'inline-flex';
+    lmBtn.textContent = `Load More (${filteredCards.length - displayedCount} remaining)`;
+    document.getElementById('load-more-wrap').style.display = '';
+  } else {
+    lmBtn.style.display = 'none';
+  }
+
+  if (viewMode === 'list') grid.classList.add('list-view');
+  else grid.classList.remove('list-view');
+}
+
+function loadMore() { renderGrid(false); }
+
+function buildTile(card, rank) {
+  const market = getMarketPrice(card);
+  const low = getLowPrice(card);
+  const img = card.images?.small || '';
+  const rarity = card.rarity || '';
+  const rarityClass = rarity.includes('Secret')||rarity.includes('Rainbow')||rarity.includes('Illustration') ? 'rarity-secret' : rarity.includes('Ultra')||rarity.includes('Amazing') ? 'rarity-ultra' : rarity.includes('Holo') ? 'rarity-holo' : '';
+  const rarityColor = getrarityColor(rarity);
+  const rankClass = rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'rank-other';
+  const isExpensive = market && market >= 50;
+
+  const tile = document.createElement('div');
+  tile.className = `card-tile ${rarityClass}`;
+  tile.style.animationDelay = `${Math.min((rank-1)%PAGE_SIZE,20)*0.025}s`;
+  tile.onclick = () => openModal(card);
+
+  tile.innerHTML = `
+    <div class="rank-badge ${rankClass}">${rank}</div>
+    <div class="card-img-wrap">
+      <div class="rarity-glow"></div>
+      ${img
+        ? `<img src="${img}" class="card-img" loading="lazy" onerror="this.outerHTML='<div class=card-img-ph>🃏</div>'">`
+        : `<div class="card-img-ph">🃏</div>`}
+    </div>
+    <div class="card-body">
+      <div class="card-name" title="${esc(card.name)}">${esc(card.name)}</div>
+      <div class="card-set">${esc(card.set?.name||'')} · ${esc(card.set?.releaseDate?.slice(0,4)||'')}</div>
+      <div class="card-prices">
+        <div class="price-row-main">
+          <div class="price-market ${!isExpensive?'cheap':''}">${market !== null ? '$'+market.toFixed(2) : '—'}</div>
+          <div class="price-label-main">MARKET</div>
+        </div>
+        ${low !== null ? `<div class="price-row-sub"><div class="price-sub-item"><div class="price-sub-val">$${low.toFixed(2)}</div><div class="price-sub-label">Low</div></div></div>` : ''}
+        ${rarity ? `<div><span class="card-rarity-tag" style="background:${rarityColor}18;color:${rarityColor}">${esc(rarity)}</span></div>` : ''}
+      </div>
+      <button class="add-btn" onclick="addToVault(event,'${esc(card.id)}')">+ Add to My Vault</button>
+    </div>`;
+  return tile;
+}
+
+function renderEmptyGrid(msg) {
+  document.getElementById('card-grid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div class="empty-title">${msg}</div><div class="empty-sub">Try changing your filters or selecting more years</div></div>`;
+}
+
+/* ════════ SETS ROW ════════ */
+function renderSetsRow(sets) {
+  const row = document.getElementById('sets-row');
+  row.style.display = sets.length ? '' : 'none';
+  row.innerHTML = '';
+  // "All" chip
+  const allChip = document.createElement('div');
+  allChip.className = 'set-chip active';
+  allChip.innerHTML = `<span style="font-size:16px">🌐</span><div><div class="set-chip-name">All Sets</div><div class="set-chip-year">${sets.length} sets</div></div>`;
+  allChip.onclick = () => { activeSetFilter = null; document.querySelectorAll('.set-chip').forEach(c=>c.classList.remove('active')); allChip.classList.add('active'); applyFiltersAndRender(); };
+  row.appendChild(allChip);
+
+  sets.sort((a,b) => new Date(b.releaseDate) - new Date(a.releaseDate)).forEach(set => {
+    const chip = document.createElement('div');
+    chip.className = 'set-chip';
+    chip.innerHTML = `
+      ${set.images?.symbol ? `<img src="${set.images.symbol}" alt="" onerror="this.style.display='none'">` : ''}
+      <div>
+        <div class="set-chip-name">${esc(set.name)}</div>
+        <div class="set-chip-year">${set.releaseDate?.slice(0,4)||''} · ${set.total||''} cards</div>
+      </div>`;
+    chip.onclick = () => {
+      activeSetFilter = set.id;
+      document.querySelectorAll('.set-chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFiltersAndRender();
+    };
+    row.appendChild(chip);
+  });
+}
+
+/* ════════ STATS ════════ */
+function updateStats() {
+  const priced = allCards.filter(c => getMarketPrice(c) !== null);
+  const prices = priced.map(c => getMarketPrice(c));
+  document.getElementById('stats-strip').style.display = '';
+  document.getElementById('stat-total').textContent = allCards.length.toLocaleString();
+  document.getElementById('stat-max').textContent = prices.length ? '$'+Math.max(...prices).toFixed(2) : '—';
+  document.getElementById('stat-min').textContent = prices.length ? '$'+Math.min(...prices).toFixed(2) : '—';
+  document.getElementById('stat-avg').textContent = prices.length ? '$'+(prices.reduce((a,b)=>a+b,0)/prices.length).toFixed(2) : '—';
+  document.getElementById('stat-sets').textContent = allSets.length;
+}
+
+function updateResultsBar() {
+  document.getElementById('results-bar').style.display = '';
+  document.getElementById('results-label').innerHTML = `Showing <b>${Math.min(displayedCount,filteredCards.length)}</b> of <b>${filteredCards.length}</b> cards`;
+}
+
+/* ════════ MODAL ════════ */
+function openModal(card) {
+  const market = getMarketPrice(card);
+  const low = getLowPrice(card);
+  const tcgp = card.tcgplayer?.prices || {};
+  const cm = card.cardmarket?.prices || {};
+  const img = card.images?.large || card.images?.small || '';
+
+  document.getElementById('modal-img').src = img;
+  document.getElementById('modal-name').textContent = card.name || '';
+  document.getElementById('modal-set').textContent = `${card.set?.name||''} · #${card.number||'?'} · ${card.set?.releaseDate?.slice(0,4)||''}`;
+
+  // Prices
+  const allPricePrints = { ...tcgp.holofoil, ...tcgp.normal, ...tcgp['1stEditionHolofoil'] };
+  document.getElementById('modal-prices').innerHTML = `
+    <div class="modal-price-block"><div class="modal-price-label">TCG Market</div><div class="modal-price-val">${market !== null ? '$'+market.toFixed(2) : '—'}</div></div>
+    <div class="modal-price-block"><div class="modal-price-label">TCG Low</div><div class="modal-price-val blue">${low !== null ? '$'+low.toFixed(2) : '—'}</div></div>
+    <div class="modal-price-block"><div class="modal-price-label">CardMkt Avg</div><div class="modal-price-val green">${cm.averageSellPrice ? '€'+cm.averageSellPrice.toFixed(2) : cm.trendPrice ? '€'+cm.trendPrice.toFixed(2) : '—'}</div></div>
+  `;
+
+  // Tags
+  const rarityColor = getrarityColor(card.rarity||'');
+  document.getElementById('modal-tags').innerHTML = [
+    card.rarity ? `<span class="modal-tag" style="background:${rarityColor}15;color:${rarityColor}">${esc(card.rarity)}</span>` : '',
+    card.supertype ? `<span class="modal-tag" style="background:rgba(41,121,204,.1);color:var(--blue)">${esc(card.supertype)}</span>` : '',
+    ...(card.subtypes||[]).map(s => `<span class="modal-tag" style="background:rgba(0,0,0,.06);color:var(--text2)">${esc(s)}</span>`)
+  ].join('');
+
+  // Links
+  const tcgUrl = card.tcgplayer?.url || `https://www.tcgplayer.com/search/pokemon/product?q=${encodeURIComponent(card.name||'')}`;
+  const ebayQ = encodeURIComponent(`${card.name||''} ${card.set?.name||''} pokemon card`);
+  document.getElementById('modal-links').innerHTML = `
+    <a class="modal-link primary" href="${tcgUrl}" target="_blank">TCGPlayer ↗</a>
+    <a class="modal-link" href="https://www.ebay.com/sch/i.html?_nkw=${ebayQ}&LH_Sold=1&LH_Complete=1" target="_blank">eBay Sold ↗</a>
+    <a class="modal-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(card.name||'')}&type=prices" target="_blank">PriceCharting ↗</a>
+  `;
+
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) document.getElementById('modal').style.display = 'none';
+}
+
+/* ════════ ADD TO VAULT ════════ */
+function addToVault(e, cardId) {
+  e.stopPropagation();
+  const card = allCards.find(c => c.id === cardId);
+  if (!card) return;
+  try {
+    const vault = JSON.parse(localStorage.getItem('roods_vault_v1') || '[]');
+    const market = getMarketPrice(card);
+    const low = getLowPrice(card);
+    const cm = card.cardmarket?.prices || {};
+    vault.push({
+      id: `${card.id}_${Date.now()}`,
+      pokemonId: card.id,
+      name: card.name,
+      tcg: 'Pokemon',
+      set: card.set?.name || '',
+      number: card.number || '',
+      rarity: card.rarity || '',
+      year: card.set?.releaseDate?.slice(0,4) || '',
+      item_type: 'raw',
+      condition: 'Near Mint',
+      grade_company: '',
+      grade_score: '',
+      sealed_type: '',
+      variant: 'None',
+      image: card.images?.large || card.images?.small || '',
+      addedAt: Date.now(),
+      prices: { tcgMarket: market, tcgLow: low, cmAvg: cm.averageSellPrice || cm.trendPrice || null, updatedAt: Date.now() },
+      tcgplayerUrl: card.tcgplayer?.url || ''
+    });
+    localStorage.setItem('roods_vault_v1', JSON.stringify(vault));
+    toast(`✓ Added ${card.name} to Vault`);
+  } catch { toast('Could not add to Vault'); }
+}
+
+/* ════════ PRICE HELPERS ════════ */
+function getMarketPrice(card) {
+  const t = card.tcgplayer?.prices || {};
+  return t.holofoil?.market ?? t.normal?.market ?? t['1stEditionHolofoil']?.market ?? t.reverseHolofoil?.market ?? t['1stEditionNormal']?.market ?? null;
+}
+function getLowPrice(card) {
+  const t = card.tcgplayer?.prices || {};
+  return t.holofoil?.low ?? t.normal?.low ?? t['1stEditionHolofoil']?.low ?? t.reverseHolofoil?.low ?? null;
+}
+
+function getrarityColor(rarity) {
+  if (!rarity) return '#b0ada6';
+  const r = rarity.toLowerCase();
+  if (r.includes('secret')||r.includes('rainbow')||r.includes('hyper')) return '#d946ef';
+  if (r.includes('illustration')) return '#a855f7';
+  if (r.includes('ultra')||r.includes('amazing')) return '#7c4dff';
+  if (r.includes('holo')) return '#f59e0b';
+  if (r.includes('rare')) return '#e3000b';
+  if (r.includes('uncommon')) return '#2979cc';
+  return '#b0ada6';
+}
+
+/* ════════ VIEW TOGGLE ════════ */
+function setView(mode) {
+  viewMode = mode;
+  const grid = document.getElementById('card-grid');
+  document.getElementById('vt-grid').classList.toggle('active', mode==='grid');
+  document.getElementById('vt-list').classList.toggle('active', mode==='list');
+  grid.classList.toggle('list-view', mode==='list');
+}
+
+/* ════════ UI HELPERS ════════ */
+function setLoading(on, label, sub) {
+  document.getElementById('loading').style.display = on ? '' : 'none';
+  document.getElementById('go-btn').disabled = on;
+  if (label) document.getElementById('load-label').textContent = label;
+  if (sub !== undefined) document.getElementById('load-sub').textContent = sub;
+  if (!on) document.getElementById('load-progress').textContent = '';
+}
+function setProgress(msg) { document.getElementById('load-progress').textContent = msg; }
+function showError(msg) { const e = document.getElementById('error-bar'); e.textContent = '⚠ '+msg; e.style.display = ''; }
+function hideError() { document.getElementById('error-bar').style.display = 'none'; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+function chunkArray(arr, size) { const out=[]; for(let i=0;i<arr.length;i+=size)out.push(arr.slice(i,i+size)); return out; }
+function toast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._tid); t._tid=setTimeout(()=>t.classList.remove('show'),2800); }
+
+/* ════════ INIT ════════ */
+buildYearGrid();
+// Auto-select current year
+const thisYear = new Date().getFullYear();
+selectRange(thisYear - 1, thisYear);
+</script>
+</body>
+</html>
