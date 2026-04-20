@@ -231,18 +231,18 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .modal-body { padding: 20px 22px 24px; }
 .modal-name { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
 .modal-set { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 14px; }
-.modal-prices { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.modal-prices { display: grid; grid-template-columns: repeat(auto-fill,minmax(110px,1fr)); gap: 10px; margin-bottom: 16px; }
 .modal-price-block { background: var(--bg2); border-radius: 10px; padding: 10px 12px; }
 .modal-price-label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-.modal-price-val { font-size: 18px; font-weight: 900; font-family: var(--mono); color: var(--red); }
+.modal-price-val { font-size: 17px; font-weight: 900; font-family: var(--mono); color: var(--red); }
 .modal-price-val.blue { color: var(--blue); }
 .modal-price-val.green { color: var(--green); }
 .modal-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
 .modal-tag { font-family: var(--mono); font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-.modal-links { display: flex; gap: 8px; flex-wrap: wrap; }
-.modal-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 9px; font-weight: 800; font-size: 13px; text-decoration: none; transition: all .2s; border: 1.5px solid var(--border); color: var(--text2); background: var(--bg2); }
-.modal-link:hover { border-color: var(--border2); color: var(--text); }
-.modal-link.primary { background: var(--red); color: #fff; border-color: var(--red); }
+.modal-links { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
+.modal-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 9px; font-weight: 800; font-size: 12px; text-decoration: none; transition: all .2s; border: 1.5px solid var(--border); color: var(--text2); background: var(--bg2); white-space: nowrap; }
+.modal-link:hover { border-color: var(--border2); color: var(--text); transform: translateY(-1px); }
+.modal-link.primary { background: var(--red); color: #fff; border-color: var(--red); box-shadow: 0 3px 12px rgba(227,0,11,.2); }
 .modal-link.primary:hover { background: var(--red2); }
 
 /* ── TOAST ── */
@@ -299,7 +299,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
     <div class="filter-bar">
       <div class="filter-group">
         <div class="filter-label">Sort by</div>
-        <select class="filter-select" id="sort-by">
+        <select class="filter-select" id="sort-by" onchange="if(allCards.length)applyFiltersAndRender()">
           <option value="market-desc">💰 Most Expensive</option>
           <option value="market-asc">🤑 Cheapest First</option>
           <option value="name-asc">A → Z</option>
@@ -307,19 +307,39 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </select>
       </div>
       <div class="filter-group">
-        <div class="filter-label">Show only</div>
-        <select class="filter-select" id="filter-rarity">
-          <option value="all">All Rarities</option>
-          <option value="holo">Holo Rare+</option>
-          <option value="ultra">Ultra Rare+</option>
-          <option value="secret">Secret Rare</option>
-          <option value="common">Common</option>
-          <option value="priced">Has Price Data</option>
+        <div class="filter-label">Card Type</div>
+        <select class="filter-select" id="filter-rarity" onchange="if(allCards.length)applyFiltersAndRender()">
+          <option value="all">✨ All Cards</option>
+          <optgroup label="── Holo / Foil ──">
+            <option value="holo-any">⭐ Any Holo / Foil</option>
+            <option value="holo-rare">🌟 Holo Rare</option>
+            <option value="reverse-holo">🔄 Reverse Holo</option>
+            <option value="ultra">💎 Ultra Rare</option>
+            <option value="secret">🌈 Secret Rare</option>
+            <option value="illustration">🎨 Illustration Rare</option>
+            <option value="special-ill">🖼 Special Ill. Rare</option>
+            <option value="hyper">👑 Hyper Rare</option>
+            <option value="rainbow">🌈 Rainbow Rare</option>
+            <option value="amazing">⚡ Amazing Rare</option>
+            <option value="gold">🥇 Gold Card</option>
+          </optgroup>
+          <optgroup label="── Standard ──">
+            <option value="rare">Rare (non-holo)</option>
+            <option value="uncommon">Uncommon</option>
+            <option value="common">Common</option>
+          </optgroup>
+          <optgroup label="── Other ──">
+            <option value="promo">🎁 Promo</option>
+            <option value="priced">💵 Has Price Data</option>
+            <option value="over10">🔥 Over $10</option>
+            <option value="over50">💸 Over $50</option>
+            <option value="over100">🚀 Over $100</option>
+          </optgroup>
         </select>
       </div>
       <div class="filter-group">
         <div class="filter-label">Price range</div>
-        <select class="filter-select" id="filter-price">
+        <select class="filter-select" id="filter-price" onchange="if(allCards.length)applyFiltersAndRender()">
           <option value="all">Any Price</option>
           <option value="under1">Under $1</option>
           <option value="1to10">$1 – $10</option>
@@ -330,7 +350,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
       </div>
       <div class="search-input-wrap">
         <div class="filter-label">Search name</div>
-        <input type="text" class="hero-search" id="name-search" placeholder="e.g. Charizard, Pikachu..." onkeydown="if(event.key==='Enter')fetchCards()">
+        <input type="text" class="hero-search" id="name-search" placeholder="e.g. Charizard, Pikachu, Umbreon..." onkeydown="if(event.key==='Enter')fetchCards()" oninput="if(allCards.length)debounceFilter()">
       </div>
       <button class="go-btn" id="go-btn" onclick="fetchCards()">🔍 Find Cards</button>
     </div>
@@ -364,7 +384,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   <!-- Results header -->
   <div class="results-bar" id="results-bar" style="display:none">
     <div class="results-label" id="results-label"></div>
-    <div style="display:flex;gap:8px;align-items:center">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <!-- Active filter pills -->
+      <div id="active-filters" style="display:flex;gap:5px;flex-wrap:wrap"></div>
       <select class="filter-select" id="sort-live" style="padding:6px 10px;font-size:12px" onchange="applyFiltersAndRender()">
         <option value="market-desc">💰 Most Expensive</option>
         <option value="market-asc">🤑 Cheapest</option>
@@ -414,7 +436,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
 <script>
 /* ════════ CONFIG ════════ */
-const WORKER_URL = 'https://roods-vault.anirood2.workers.dev';
+const WORKER_URL = 'https://roods-vault.YOUR_SUBDOMAIN.workers.dev';
 // After deploying worker, replace YOUR_SUBDOMAIN with your Cloudflare subdomain
 // e.g. 'https://roods-vault.anirood.workers.dev'
 
@@ -589,6 +611,10 @@ async function fetchCardsByNameInSets(name, setIds) {
   return cards.filter(c => setIds.includes(c.set?.id));
 }
 
+/* ════════ DEBOUNCE for live name search ════════ */
+let _filterTimer = null;
+function debounceFilter() { clearTimeout(_filterTimer); _filterTimer = setTimeout(applyFiltersAndRender, 280); }
+
 /* ════════ FILTER + RENDER ════════ */
 function applyFiltersAndRender() {
   const sortMode = document.getElementById('sort-live').value || document.getElementById('sort-by').value;
@@ -596,35 +622,50 @@ function applyFiltersAndRender() {
   const priceFilter = document.getElementById('filter-price').value;
   const nameFilter = document.getElementById('name-search').value.trim().toLowerCase();
 
+  // Sync both sort dropdowns
+  document.getElementById('sort-live').value = sortMode;
+  document.getElementById('sort-by').value = sortMode;
+
   let cards = [...allCards];
 
   // Set filter
   if (activeSetFilter) cards = cards.filter(c => c.set?.id === activeSetFilter);
 
-  // Name filter (client-side refinement)
+  // Name filter
   if (nameFilter) cards = cards.filter(c => (c.name||'').toLowerCase().includes(nameFilter));
 
-  // Rarity filter
+  // Granular rarity filter
   if (rarityFilter !== 'all') {
-    const rarityMap = {
-      holo: ['Rare Holo','Rare Holo EX','Rare Holo GX','Rare Holo LVX','Rare Holo Star','Rare Holo V','Rare Holo VMAX','Rare Holo VSTAR'],
-      ultra: ['Rare Ultra','Rare Rainbow','Rare Secret','Rare Shining','Rare Shiny','Rare Shiny GX','Amazing Rare','Double Rare','Illustration Rare','Special Illustration Rare','Hyper Rare'],
-      secret: ['Rare Secret','Rare Rainbow','Special Illustration Rare','Hyper Rare','Rare Shining'],
-      common: ['Common'],
-      priced: null // handled below
-    };
-    if (rarityFilter === 'priced') {
-      cards = cards.filter(c => getMarketPrice(c) !== null);
-    } else {
-      const targets = rarityMap[rarityFilter] || [];
-      cards = cards.filter(c => {
-        const r = c.rarity || '';
-        if (rarityFilter === 'holo') return targets.includes(r) || r.includes('Holo') || r.includes('Rare') || getMarketPrice(c) > 5;
-        if (rarityFilter === 'ultra') return targets.includes(r) || r.includes('Ultra') || r.includes('Rainbow') || r.includes('Secret') || r.includes('Amazing') || r.includes('Illustration');
-        if (rarityFilter === 'secret') return targets.includes(r) || r.includes('Secret') || r.includes('Rainbow');
-        return targets.includes(r);
-      });
-    }
+    cards = cards.filter(c => {
+      const r = c.rarity || '';
+      const rl = r.toLowerCase();
+      const tcgp = c.tcgplayer?.prices || {};
+      const hasReverse = !!tcgp.reverseHolofoil;
+      const hasHolo = !!tcgp.holofoil || !!tcgp['1stEditionHolofoil'];
+
+      switch(rarityFilter) {
+        case 'holo-any':      return rl.includes('holo') || r.includes('Rare') || hasHolo || hasReverse;
+        case 'holo-rare':     return r === 'Rare Holo' || r === 'Rare Holo V' || r === 'Rare Holo VMAX' || r === 'Rare Holo VSTAR' || r === 'Rare Holo GX' || r === 'Rare Holo EX' || r === 'Rare Holo LVX' || r === 'Rare Holo Star';
+        case 'reverse-holo':  return hasReverse || rl.includes('reverse');
+        case 'ultra':         return r.includes('Ultra') || r === 'Double Rare' || r === 'ACE SPEC Rare';
+        case 'secret':        return r.includes('Secret') || r === 'Rare Secret';
+        case 'illustration':  return r === 'Illustration Rare';
+        case 'special-ill':   return r === 'Special Illustration Rare';
+        case 'hyper':         return r === 'Hyper Rare';
+        case 'rainbow':       return r.includes('Rainbow');
+        case 'amazing':       return r === 'Amazing Rare';
+        case 'gold':          return rl.includes('gold') || rl.includes('shining');
+        case 'rare':          return r === 'Rare' && !rl.includes('holo') && !rl.includes('ultra') && !rl.includes('secret');
+        case 'uncommon':      return r === 'Uncommon';
+        case 'common':        return r === 'Common';
+        case 'promo':         return rl.includes('promo') || (c.set?.name||'').toLowerCase().includes('promo');
+        case 'priced':        return getMarketPrice(c) !== null;
+        case 'over10':        return (getMarketPrice(c)||0) >= 10;
+        case 'over50':        return (getMarketPrice(c)||0) >= 50;
+        case 'over100':       return (getMarketPrice(c)||0) >= 100;
+        default: return true;
+      }
+    });
   }
 
   // Price filter
@@ -641,7 +682,7 @@ function applyFiltersAndRender() {
     });
   }
 
-  // Sort
+  // Sort — always applied, auto-triggers on filter change
   if (sortMode === 'market-desc') cards.sort((a,b) => (getMarketPrice(b)||0) - (getMarketPrice(a)||0));
   else if (sortMode === 'market-asc') cards.sort((a,b) => {
     const pa = getMarketPrice(a), pb = getMarketPrice(b);
@@ -650,7 +691,7 @@ function applyFiltersAndRender() {
   });
   else if (sortMode === 'name-asc') cards.sort((a,b) => (a.name||'').localeCompare(b.name||''));
   else if (sortMode === 'rarity') {
-    const rOrder = ['Hyper Rare','Special Illustration Rare','Rare Secret','Rare Rainbow','Amazing Rare','Illustration Rare','Rare Ultra','Rare Shiny GX','Rare Shining','Rare Holo VSTAR','Rare Holo VMAX','Rare Holo V','Rare Holo GX','Rare Holo EX','Rare Holo','Rare','Uncommon','Common'];
+    const rOrder = ['Hyper Rare','Special Illustration Rare','Illustration Rare','Rare Secret','Rare Rainbow','Amazing Rare','Rare Ultra','Double Rare','ACE SPEC Rare','Rare Shiny GX','Rare Shining','Rare Holo VSTAR','Rare Holo VMAX','Rare Holo V','Rare Holo GX','Rare Holo EX','Rare Holo','Rare','Uncommon','Common'];
     cards.sort((a,b) => {
       const ai = rOrder.indexOf(a.rarity||''), bi = rOrder.indexOf(b.rarity||'');
       const as_ = ai === -1 ? 999 : ai, bs_ = bi === -1 ? 999 : bi;
@@ -663,6 +704,21 @@ function applyFiltersAndRender() {
   displayedCount = 0;
   renderGrid(true);
   updateResultsBar();
+  renderActiveFilters(rarityFilter, priceFilter, nameFilter, sortMode);
+}
+
+/* ════════ ACTIVE FILTER PILLS ════════ */
+function renderActiveFilters(rarity, price, name, sort) {
+  const el = document.getElementById('active-filters');
+  if (!el) return;
+  const pills = [];
+  const rarityLabels = { 'holo-any':'Any Holo','holo-rare':'Holo Rare','reverse-holo':'Reverse Holo','ultra':'Ultra Rare','secret':'Secret Rare','illustration':'Illustration Rare','special-ill':'Special Ill. Rare','hyper':'Hyper Rare','rainbow':'Rainbow Rare','amazing':'Amazing Rare','gold':'Gold','rare':'Rare','uncommon':'Uncommon','common':'Common','promo':'Promo','priced':'Has Price','over10':'$10+','over50':'$50+','over100':'$100+' };
+  const priceLabels = { 'under1':'<$1','1to10':'$1-$10','10to50':'$10-$50','50to200':'$50-$200','over200':'$200+' };
+  if (rarity !== 'all') pills.push(`<span style="background:rgba(227,0,11,.1);color:var(--red);font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer" onclick="document.getElementById('filter-rarity').value='all';applyFiltersAndRender()">✕ ${rarityLabels[rarity]||rarity}</span>`);
+  if (price !== 'all') pills.push(`<span style="background:rgba(41,121,204,.1);color:var(--blue);font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer" onclick="document.getElementById('filter-price').value='all';applyFiltersAndRender()">✕ ${priceLabels[price]||price}</span>`);
+  if (name) pills.push(`<span style="background:rgba(24,160,88,.1);color:var(--green);font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer" onclick="document.getElementById('name-search').value='';applyFiltersAndRender()">✕ "${name}"</span>`);
+  if (activeSetFilter) pills.push(`<span style="background:rgba(124,77,255,.1);color:var(--purple);font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer" onclick="activeSetFilter=null;document.querySelectorAll('.set-chip').forEach(c=>c.classList.remove('active'));applyFiltersAndRender()">✕ Set filter</span>`);
+  el.innerHTML = pills.join('');
 }
 
 /* ════════ GRID RENDER ════════ */
@@ -791,18 +847,33 @@ function openModal(card) {
   const tcgp = card.tcgplayer?.prices || {};
   const cm = card.cardmarket?.prices || {};
   const img = card.images?.large || card.images?.small || '';
+  const name = card.name || '';
+  const setName = card.set?.name || '';
+  const num = card.number || '?';
+  const year = card.set?.releaseDate?.slice(0,4) || '';
 
   document.getElementById('modal-img').src = img;
-  document.getElementById('modal-name').textContent = card.name || '';
-  document.getElementById('modal-set').textContent = `${card.set?.name||''} · #${card.number||'?'} · ${card.set?.releaseDate?.slice(0,4)||''}`;
+  document.getElementById('modal-name').textContent = name;
+  document.getElementById('modal-set').textContent = `${setName} · #${num} · ${year}`;
 
-  // Prices
-  const allPricePrints = { ...tcgp.holofoil, ...tcgp.normal, ...tcgp['1stEditionHolofoil'] };
-  document.getElementById('modal-prices').innerHTML = `
-    <div class="modal-price-block"><div class="modal-price-label">TCG Market</div><div class="modal-price-val">${market !== null ? '$'+market.toFixed(2) : '—'}</div></div>
-    <div class="modal-price-block"><div class="modal-price-label">TCG Low</div><div class="modal-price-val blue">${low !== null ? '$'+low.toFixed(2) : '—'}</div></div>
-    <div class="modal-price-block"><div class="modal-price-label">CardMkt Avg</div><div class="modal-price-val green">${cm.averageSellPrice ? '€'+cm.averageSellPrice.toFixed(2) : cm.trendPrice ? '€'+cm.trendPrice.toFixed(2) : '—'}</div></div>
-  `;
+  // All price variants
+  const allVariants = ['holofoil','reverseHolofoil','normal','1stEditionHolofoil','1stEditionNormal'];
+  const variantLabels = { holofoil:'Holo', reverseHolofoil:'Reverse Holo', normal:'Normal', '1stEditionHolofoil':'1st Ed Holo', '1stEditionNormal':'1st Ed Normal' };
+  let priceHTML = '';
+  allVariants.forEach(v => {
+    if (tcgp[v]?.market) {
+      priceHTML += `<div class="modal-price-block">
+        <div class="modal-price-label">${variantLabels[v]||v}</div>
+        <div class="modal-price-val">$${tcgp[v].market.toFixed(2)}</div>
+        ${tcgp[v].low ? `<div style="font-family:var(--mono);font-size:10px;color:var(--blue)">Low $${tcgp[v].low.toFixed(2)}</div>` : ''}
+      </div>`;
+    }
+  });
+  if (!priceHTML) priceHTML = `<div class="modal-price-block"><div class="modal-price-label">TCG Market</div><div class="modal-price-val">${market !== null ? '$'+market.toFixed(2) : '—'}</div></div>`;
+  if (cm.averageSellPrice || cm.trendPrice) {
+    priceHTML += `<div class="modal-price-block"><div class="modal-price-label">CardMarket</div><div class="modal-price-val green">€${(cm.averageSellPrice||cm.trendPrice).toFixed(2)}</div>${cm.avg7 ? `<div style="font-family:var(--mono);font-size:10px;color:var(--text3)">7d avg €${cm.avg7.toFixed(2)}</div>` : ''}</div>`;
+  }
+  document.getElementById('modal-prices').innerHTML = priceHTML;
 
   // Tags
   const rarityColor = getrarityColor(card.rarity||'');
@@ -812,13 +883,35 @@ function openModal(card) {
     ...(card.subtypes||[]).map(s => `<span class="modal-tag" style="background:rgba(0,0,0,.06);color:var(--text2)">${esc(s)}</span>`)
   ].join('');
 
-  // Links
-  const tcgUrl = card.tcgplayer?.url || `https://www.tcgplayer.com/search/pokemon/product?q=${encodeURIComponent(card.name||'')}`;
-  const ebayQ = encodeURIComponent(`${card.name||''} ${card.set?.name||''} pokemon card`);
+  // Buy + price links
+  const tcgBuyUrl = card.tcgplayer?.url || `https://www.tcgplayer.com/search/pokemon/product?q=${encodeURIComponent(name)}&view=grid`;
+  const ebayBuyQ = encodeURIComponent(`${name} ${setName} pokemon card`);
+  const ebaySoldQ = encodeURIComponent(`${name} ${setName} ${num} pokemon`);
+
   document.getElementById('modal-links').innerHTML = `
-    <a class="modal-link primary" href="${tcgUrl}" target="_blank">TCGPlayer ↗</a>
-    <a class="modal-link" href="https://www.ebay.com/sch/i.html?_nkw=${ebayQ}&LH_Sold=1&LH_Complete=1" target="_blank">eBay Sold ↗</a>
-    <a class="modal-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(card.name||'')}&type=prices" target="_blank">PriceCharting ↗</a>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+      <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase">🛒 Buy Now</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="modal-link primary" href="${tcgBuyUrl}" target="_blank" rel="noopener">
+          <span>🃏</span> Buy on TCGPlayer
+        </a>
+        <a class="modal-link" href="https://www.ebay.com/sch/i.html?_nkw=${ebayBuyQ}&_sacat=0&LH_BIN=1" target="_blank" rel="noopener" style="background:rgba(255,150,0,.08);border-color:rgba(255,150,0,.25);color:#d97706">
+          <span>🔨</span> Buy on eBay
+        </a>
+      </div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:4px">📊 Price Research</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="modal-link" href="https://www.ebay.com/sch/i.html?_nkw=${ebaySoldQ}&LH_Sold=1&LH_Complete=1" target="_blank" rel="noopener">
+          <span>✅</span> eBay Sold
+        </a>
+        <a class="modal-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(name+' '+setName)}&type=prices" target="_blank" rel="noopener">
+          <span>📈</span> PriceCharting
+        </a>
+        <a class="modal-link" href="https://www.psacard.com/auctionprices/search?q=${encodeURIComponent(name)}" target="_blank" rel="noopener">
+          <span>🏆</span> PSA Auction
+        </a>
+      </div>
+    </div>
   `;
 
   document.getElementById('modal').style.display = 'flex';
